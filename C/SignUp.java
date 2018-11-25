@@ -8,14 +8,17 @@ import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.JCheckBox;
 import javax.swing.ImageIcon;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class SignUp extends JFrame{
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private JTextField textField_3;
+	private JTextField textField_4;
 	public SignUp() {
-		setTitle("ÌöåÏõêÍ∞ÄÏûÖ");
+		setTitle("»∏ø¯∞°¿‘");
 		setSize(505,647);
 		getContentPane().setLayout(null);
 		
@@ -30,6 +33,12 @@ public class SignUp extends JFrame{
 		getContentPane().add(lblNewLabel);
 		
 		textField = new JTextField();
+		textField.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				textField.setText(null);
+			}
+		});
 		textField.setForeground(new Color(192, 192, 192));
 		textField.setText("  \uC774\uBA54\uC77C \uC8FC\uC18C \uC785\uB825");
 		textField.setBounds(12, 182, 465, 42);
@@ -37,6 +46,11 @@ public class SignUp extends JFrame{
 		textField.setColumns(10);
 		
 		textField_1 = new JTextField();
+		textField_1.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				textField_1.setText(null);
+			}
+		});
 		textField_1.setText("  \uBE44\uBC00\uBC88\uD638 \uC785\uB825");
 		textField_1.setForeground(new Color(192, 192, 192));
 		textField_1.setColumns(10);
@@ -44,6 +58,11 @@ public class SignUp extends JFrame{
 		getContentPane().add(textField_1);
 		
 		textField_2 = new JTextField();
+		textField_2.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				textField_2.setText(null);
+			}
+		});
 		textField_2.setForeground(new Color(192, 192, 192));
 		textField_2.setText("  \uBE44\uBC00\uBC88\uD638 \uC7AC\uD655\uC778");
 		textField_2.setColumns(10);
@@ -51,14 +70,31 @@ public class SignUp extends JFrame{
 		getContentPane().add(textField_2);
 		
 		textField_3 = new JTextField();
+		textField_3.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				textField_3.setText(null);
+			}
+		});
 		textField_3.setForeground(new Color(192, 192, 192));
 		textField_3.setText("  \uB2C9\uB124\uC784 \uC785\uB825");
 		textField_3.setColumns(10);
 		textField_3.setBounds(12, 306, 465, 42);
 		getContentPane().add(textField_3);
 		
+		textField_4 = new JTextField();
+		textField_4.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				textField_4.setText(null);
+			}
+		});
+		textField_4.setText("  \uC804\uD654\uBC88\uD638 \uC785\uB825");
+		textField_4.setForeground(Color.LIGHT_GRAY);
+		textField_4.setColumns(10);
+		textField_4.setBounds(12, 348, 465, 42);
+		getContentPane().add(textField_4);
+		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(12, 382, 465, 143);
+		panel_1.setBounds(12, 386, 465, 143);
 		getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 		
@@ -75,11 +111,26 @@ public class SignUp extends JFrame{
 		panel_1.add(checkBox_1);
 		
 		JLabel lblNewLabel_1 = new JLabel("");
+		lblNewLabel_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				try {
+					new MemberDAO().create(new MemberDTO(textField.getText(), Integer.parseInt(textField_2.getText()),
+							textField_3.getText(),textField_4.getText()));
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			
+			}
+		});
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setIcon(new ImageIcon("D:\\\uC591\uCC2C\uC6B0\uD53D\uD53D\\091.png"));
-		lblNewLabel_1.setBounds(12, 557, 465, 42);
+		lblNewLabel_1.setBounds(12, 541, 465, 42);
 		getContentPane().add(lblNewLabel_1);
-		
 		
 		
 		

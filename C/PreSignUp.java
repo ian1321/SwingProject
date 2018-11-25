@@ -17,17 +17,28 @@ public class PreSignUp extends JFrame{
 	private JTextField textField_1;
 	public PreSignUp() {
 		
-		setTitle("ÌöåÏõêÍ∞ÄÏûÖ");
+		setTitle("»∏ø¯∞°¿‘");
 		setSize(505,647);
 		getContentPane().setLayout(null);
 		
 		textField = new JTextField();
+		textField.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				textField.setText(null);
+			}
+		});
 		textField.setBounds(71, 255, 323, 45);
 		textField.setText("\uC774\uBA54\uC77C \uC8FC\uC18C \uC785\uB825 \uD544\uC218()");
 		getContentPane().add(textField);
 		textField.setColumns(10);
 		
 		textField_1 = new JTextField();
+		textField_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				textField_1.setText(null);
+			}
+		});
 		textField_1.setBounds(71, 312, 323, 45);
 		textField_1.setText("\uBE44\uBC00\uBC88\uD638 \uC785\uB825 \uD544\uC218()");
 		textField_1.setColumns(10);
@@ -40,6 +51,19 @@ public class PreSignUp extends JFrame{
 		getContentPane().add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("");
+		lblNewLabel_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				
+				try {
+					if (new MemberDAO().select(textField.getText(), textField_1.getText())) {
+						PreSignUp pre = new PreSignUp();
+}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}});
 		lblNewLabel_1.setBackground(new Color(204, 0, 0));
 		lblNewLabel_1.setBounds(71, 389, 323, 45);
 		lblNewLabel_1.setIcon(new ImageIcon("D:\\\uC591\uCC2C\uC6B0\uD53D\uD53D\\088.png"));
@@ -60,7 +84,7 @@ public class PreSignUp extends JFrame{
 		JLabel lblNewLabel_3 = new JLabel("\uC694\uAE30\uC694\uAC00 \uCC98\uC74C\uC774\uC2E0\uAC00\uC694?");
 		lblNewLabel_3.setBounds(71, 489, 166, 17);
 		lblNewLabel_3.setForeground(Color.GRAY);
-		lblNewLabel_3.setFont(new Font("Íµ¥Î¶ºÏ≤¥", Font.PLAIN, 14));
+		lblNewLabel_3.setFont(new Font("±º∏≤√º", Font.PLAIN, 14));
 		getContentPane().add(lblNewLabel_3);
 		
 		JPanel panel = new JPanel();
