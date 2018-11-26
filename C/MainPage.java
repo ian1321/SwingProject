@@ -29,16 +29,15 @@ import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-@SuppressWarnings("serial")
 public class MainPage extends JFrame implements ActionListener{
 	static JTextField textField;
 	static JTextField textField_1;
-	static JButton button = new JButton("È¸¿ø°¡ÀÔ");
-	static JButton button2 = new JButton("·Î±×ÀÎ");
+	static JButton button = new JButton("íšŒì›ê°€ì…");
+	static JButton button2 = new JButton("ë¡œê·¸ì¸");
 	
 	ArrayList list = new ArrayList();
 	public MainPage() {
-		setTitle("¸ŞÀÎÆäÀÌÁö");
+		setTitle("ë©”ì¸í˜ì´ì§€");
 		setSize(1148, 652);
 		getContentPane().setLayout(null);
 
