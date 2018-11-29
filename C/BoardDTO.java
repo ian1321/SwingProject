@@ -6,22 +6,8 @@ public class BoardDTO {
 	private String id; //Id
 	private String title; //제목
 	private String content; //내용
-
-	//Constructor생성자
-	public BoardDTO(String title, String id, String content) {
-		super();
-		this.title = title;
-		this.id = id;
-		this.content = content;
-	}
-	//Constructor생성자
-	public BoardDTO(int number, String id, String title, String content) {
-		super();
-		this.number = number;
-		this.id = id;
-		this.title = title;
-		this.content = content;
-	}
+	public static String Upnumber;
+	
 	//Constructor생성자
 	public BoardDTO() {
 	}

@@ -6,9 +6,11 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.JScrollPane;
 import javax.swing.JButton;
 import javax.swing.table.DefaultTableModel;
@@ -17,9 +19,11 @@ import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 
 public class MainBoard extends JFrame {
 	// 멤버변수
@@ -86,21 +90,25 @@ public class MainBoard extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// 선택한 값의 id가져오기
 				int sRow = jTable.getSelectedRow();
-				String rowID = (String) jTable.getValueAt(sRow, 3);
-				try {
-					ArrayList idBoard = new BoardDAO().update(rowID);
-
-					// String tit=(String) idBoard.get(1);
-					String tit = "tit";
-
-					// String cot = (String) idBoard.get(3);
-					String cot = "cot";
-
-					Board board = new Board(tit, cot);
-
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				String rowId = (String) jTable.getValueAt(sRow, 2);
+				// 선택한 값과 로그인한 아이디가 같지 않으면
+				if (MemberDTO.SessionId.equals(null) || !MemberDTO.SessionId.equals(rowId)) {
+					JOptionPane.showMessageDialog(null, "내 글이 아닙니다", "알림", 0);
+					// 아이디가 작성자 아이디와 같을때 수정
+				} else if (MemberDTO.SessionId.equals(rowId)) {
+					//선택한 줄의 넘버 가져오기
+					try {
+						ArrayList arr =new BoardDAO().recall(jTable.getValueAt(sRow, 0));
+						
+						Board board = new Board();
+						board.textField.setText((String) arr.get(0));
+						board.textPane.setText((String) arr.get(1));
+						new BoardDTO().Upnumber = (String) arr.get(2);
+						dispose();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}				
 				}
 			}
 		});
@@ -111,14 +119,14 @@ public class MainBoard extends JFrame {
 		JButton btnNewButton_2 = new JButton("내 글보기");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ArrayList arr1 = null; //내가 작성할 글 가져올 ArrayList
-				Object[][] rowData1 = null; //테이블 row에 넣을 Object2차 배열
+				ArrayList arr1 = null; // 내가 작성할 글 가져올 ArrayList
+				Object[][] rowData1 = null; // 테이블 row에 넣을 Object2차 배열
 				try {
-					arr1 = new BoardDAO().update(MemberDTO.SessionId); //arr1에 사용중인 아이디값 넣어서 DAO.update 
-					 // rowData배열생성시에  행값에 updateCount값(데이터가 존재하는만큼 카운트) 설정
-					rowData1 = new Object[new BoardDAO().updateCount(MemberDTO.SessionId)][4];
+					arr1 = new BoardDAO().selectMine(MemberDTO.SessionId); // arr1에 사용중인 아이디값 넣어서 DAO.update
+					// rowData배열생성시에 행값에 updateCount값(데이터가 존재하는만큼 카운트) 설정
+					rowData1 = new Object[new BoardDAO().sMCount(MemberDTO.SessionId)][4];
 
-					//rowData1에 DAO.update로 받아온 ArrayList값 대입
+					// rowData1에 DAO.update로 받아온 ArrayList값 대입
 					for (int i = 0; i < rowData1.length; i++) {
 						for (int j = 0; j < rowData1[i].length; j++) {
 							rowData1[i][j] = arr1.get(i * 4 + j);
@@ -127,9 +135,9 @@ public class MainBoard extends JFrame {
 				} catch (Exception e2) {
 					e2.printStackTrace();
 				}
-				//값 가져와서 행에 출력. 열이름은 그대로출력
+				// 값 가져와서 행에 출력. 열이름은 그대로출력
 				DefaultTableModel model = new DefaultTableModel(rowData1, columnNames);
-				//출력시에 모양 유지
+				// 출력시에 모양 유지
 				jTable.setModel(model);
 				jTable.getColumnModel().getColumn(0).setPreferredWidth(41);
 				jTable.getColumnModel().getColumn(1).setPreferredWidth(123);
@@ -140,12 +148,42 @@ public class MainBoard extends JFrame {
 		btnNewButton_2.setBounds(365, 137, 97, 23);
 		getContentPane().add(btnNewButton_2);
 
-		//글 삭제
+		// 글 삭제
 		JButton btnNewButton_3 = new JButton("글 삭제");
+		btnNewButton_3.addActionListener(new ActionListener() {
+			// 삭제하기기능
+			public void actionPerformed(ActionEvent e) {
+				// 선택한 행 가져오기
+				int sRow = jTable.getSelectedRow();
+				// 선택한 행의 2번째값 = ID 를 가져오기
+				String rowId = (String) jTable.getValueAt(sRow, 2);
+				// 아이디가 널값이거나 고른행의 아이디가 내 아이디랑 같지 않을때
+				if (MemberDTO.SessionId.equals(null) || !MemberDTO.SessionId.equals(rowId)) {
+					JOptionPane.showMessageDialog(null, "내 글이 아닙니다", "알림", 0);
+					// 아이디가 작성자 아이디와 같을때 삭제
+				} else if (MemberDTO.SessionId.equals(rowId)) {
+					// 삭제확인
+					int option = JOptionPane.showConfirmDialog(null, "정말 삭제하시겠습니까?");
+					if (option == 0) { // 예를 눌렀을때
+						try {
+							// 선택한 행의 글 넘버 가져와서 DAO.delete
+							new BoardDAO().delete(jTable.getValueAt(sRow, 0));
+							JOptionPane.showMessageDialog(null, "글이 삭제되었습니다.", "알림", 0);
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					} else {
+						// 그 외에는 삭제 하지 않기
+						JOptionPane.showMessageDialog(null, "삭제 안하기를 선택하셨습니다.", "알림", 0);
+					}
+				}
+			}
+		});
 		btnNewButton_3.setBounds(255, 137, 97, 23);
 		getContentPane().add(btnNewButton_3);
-		
-		//게시판 목록 테이블
+
+		// 게시판 목록 테이블
 		jTable = new JTable(rowData, columnNames);
 		jTable.getColumnModel().getColumn(0).setPreferredWidth(41);
 		jTable.getColumnModel().getColumn(1).setPreferredWidth(123);
@@ -154,10 +192,7 @@ public class MainBoard extends JFrame {
 		JScrollPane scroll = new JScrollPane(jTable);
 		scroll.setBounds(12, 208, 465, 366);
 		getContentPane().add(scroll);
-		
-		
 
-		
 		setVisible(true);
 	}
 }

@@ -2,6 +2,7 @@ package swing;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
@@ -19,8 +20,20 @@ public class Board extends JFrame {
 	JTextField textField; // 제목입력 텍스트필드
 	JTextPane textPane; // 내용입력 텍스트필드
 
+	
+	
+
+	public void setTextField(Object o) {
+		this.textField.setText((String) o);;
+	}
+
+	public void setTextPane(Object o) {
+		this.textPane.setText((String) o);
+	}
+
 	public Board() {
 		// 프레임설정
+		
 		setTitle("È¸¿ø°¡ÀÔ");
 		setSize(505, 647);
 		getContentPane().setLayout(null);
@@ -68,11 +81,31 @@ public class Board extends JFrame {
 		JButton btnNewButton = new JButton("글 저장");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 				try {
+					if (new BoardDAO().countMyRow(textField.getText()) >0) {
+						BoardDTO dto = new BoardDTO();
+						new BoardDTO();
+						dto.setNumber(Integer.parseInt(BoardDTO.Upnumber));
+						dto.setTitle(textField.getText());
+						dto.setId(MemberDTO.SessionId);
+						dto.setContent(textPane.getText());
+						new BoardDAO().update(dto);
+						JOptionPane.showMessageDialog(null, "글수정을 완료했습니다. 수정합니다", "알림", 0);
+						new MainBoard();
+						dispose();
+					}
 					//DAO.create 실행후 제목, 실행중ID, 텍스트내용 - 텍스트페인 dto개체로 전송
-					new BoardDAO().create(new BoardDTO(textField.getText(), MemberDTO.SessionId, textPane.getText()));
-					dispose(); //창닫기
-				} catch (SQLException e1) {
+					else {
+						BoardDTO dto = new BoardDTO();
+						dto.setTitle(textField.getText());
+						dto.setId( MemberDTO.SessionId);
+						dto.setContent(textPane.getText());
+						new BoardDAO().create(dto);
+						dispose(); //창닫기
+					}
+					
+				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
 			}
@@ -82,8 +115,5 @@ public class Board extends JFrame {
 		setVisible(true);
 	}
 
-	public Board(String tit, String cot) throws HeadlessException {
-		this.textField.setText(tit);
-		this.textPane.setText(cot);
-	}
+	
 }
