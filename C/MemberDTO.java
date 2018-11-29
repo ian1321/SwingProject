@@ -1,18 +1,19 @@
 package swing;
 
 public class MemberDTO {
-	private String id;
-	private int pw;
-	private String name;
-	private String tel;
+	//transfer할 값들
+	private String id; //id varchar(20)
+	private int pw; //pw int(20)
+	private String name; //name varchar(20)
+	private String tel; //tel varchar(20)
+	public static String SessionId; //로그인한 아이디 변수값 static에 저장
 	
-	
-	@Override
+	//toString override
 	public String toString() {
 		return "MemberDTO [id=" + id + ", pw=" + pw + ", name=" + name + ", tel=" + tel + "]";
 	}
 
-
+	//constructor 생성자 생성
 	public MemberDTO(String id, int pw, String name, String tel) {
 		super();
 		this.id = id;
@@ -21,11 +22,10 @@ public class MemberDTO {
 		this.tel = tel;
 	}
 	
-	
+	//constructor override
 	public MemberDTO() {
 		super();
 	}
-
 
 	public String getId() {
 		return id;

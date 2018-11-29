@@ -11,78 +11,134 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import com.mysql.jdbc.Statement;
 
 public class MemberDAO implements crud {
-	java.sql.Connection con;
-	private ResultSet rs;
+	// ë³€ìˆ˜ì„¤ì •
+	Connection con; // ì»¤ë„¥ì…˜ë³€ìˆ˜
+	private ResultSet rs; // ê²°ê³¼ê°’ ë„£ì„ ë³€ìˆ˜
 
+	// ì—°ê²° ë©”ì†Œë“œ
 	private boolean connect() {
-		boolean result = false;
-		// 1. throws exception °ú try catch·Î ¹­¾î¼­ System.out.println("Å¬·¡½º ·Îµå ½ÇÆĞ : " +
-		// e.getMessage());¸¦ catchµÚ¿¡ Ãâ·ÂÇÏ´Â°ÍÁß¿¡ ¾î¶² ¹æ¹ıÀÌ ´õ ÁÁÀºÁö
-		// 2. if (connect())·Î ¹­¾î¼­ ¿¬°áÈ®ÀÎÈÄ ½ÇÇà or connect¹®À» ¸Å ¸Ş¼Òµå¸¶´Ù ³Ö¾îÁÖ´Â°Í
+		boolean result = false; // ì—°ê²° ê²°ê³¼ ë³€ìˆ˜
 		try {
+			// ì—°ê²°ì´ ëœë‹¤ë©´ result = true
 			Class.forName("com.mysql.jdbc.Driver");
 			DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery", "root", "1234");
 			result = true;
 		} catch (Exception e) {
-			System.out.println("¿¬°á ½ÇÆĞ : " + e.getMessage());
+			// ì—°ê²°ì‹¤íŒ¨
+			System.out.println("ì—°ê²° ì‹¤íŒ¨ : " + e.getMessage());
 		}
 		return result;
 	}
 
+	// create DAO -- ì…ë ¥ê°’ dtoê°’ ë°›ì•„ì„œ DBì— sql statementì‹¤í–‰
 	public void create(MemberDTO dto) throws Exception {
+		// ì—°ê²°ì´ ëœë‹¤ë©´
 		if (connect()) {
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery", "root", "1234");
 
+			// insert sqlì‹¤í–‰ë¬¸
 			PreparedStatement ps = con.prepareStatement("insert into member(id,pw,name,tel) value(?,?,?,?)");
-
+			// setStringìœ¼ë¡œ sqlë¬¸ì— ì„¤ì •
 			ps.setString(1, dto.getId());
 			ps.setInt(2, dto.getPw());
 			ps.setString(3, dto.getName());
 			ps.setString(4, dto.getTel());
+			// ì‹¤í–‰
 			ps.executeUpdate();
 			ps.close();
 			con.close();
 		}
 	}
 
+	// select DAO -- id, pwê°’ ë°›ì•„ì„œ DBì™€ ë¹„êµ
 	public Boolean select(String id, String pw) throws Exception {
+
+		// ë¡œê·¸ì¸ì´ ë˜ëŠ”ì§€ ê²€ì‚¬í•˜ëŠ” ë³€ìˆ˜ boolean login
 		Boolean login = false;
+		// ì—°ê²°ì´ ëœë‹¤ë©´
 		if (connect()) {
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery", "root", "1234");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery", "root", "1234");
+			java.sql.Statement ps = con.createStatement();
 
-			java.sql.Statement ps = con.createStatement(); //¹æ½Ä :  preparestatement¿¡ ³Ö´Â°Í°ú, ÀÌ¹æ¹ı
-
+			// select sqlì‹¤í–‰ë¬¸
 			String sql = "select * from member where id='" + id + "'";
-			rs = ps.executeQuery(sql); // ÀĞ¾î¿À´Â°Å¶ó ´Ù¸£´Ù ºñ±³ÇØ //¸®ÅÏÅ¸ÀÔÀÌ ResultSet
-			
-			while (rs.next() == true) { // ´ÙÀ½°ªÀÇ
-				if (rs.getString(2).equals(pw)) { // pw¿Í °°ÀºÁö ºñ±³
-					login = true; // °°À¸¸é ·Î±×ÀÎ ¼º°ø
-				} else { // ¾ÆÀÌµğ´Â°°°í pw°¡ ´Ù¸¥°æ¿ì
+			rs = ps.executeQuery(sql); // ê²°ê³¼ê°’ì„ rsì— ëŒ€ì…
+
+			// rsê°’ì´ ìˆëŠ”ë§Œí¼, ë¹„ë°€ë²ˆí˜¸ì™€ ê°™ì€ì§€ ë¹„êµ
+			while (rs.next() == true) {
+				if (rs.getString(2).equals(pw)) {
+					login = true;
+				} else {
 					login = false;
 				}
 			}
+			ps.close();
+			con.close();
 		}
+		// true or falseê°’ì„ ë°˜í™˜
 		return login;
+
 	}
 
+	// update DAO -- dtoê°’ ë°›ì•„ì„œ í•´ë‹¹ IDì— í•´ë‹¹í•˜ëŠ” ì—…ë°ì´íŠ¸
 	public void update(MemberDTO dto) throws Exception {
-		Class.forName("com.mysql.jdbc.Driver");
+		if (connect()) {
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery", "root", "1234");
 
-		Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/member", "root", "1234");
+			// update sqlê°’ ì„¤ì • preparestatement
+			PreparedStatement ps = con
+					.prepareStatement("update member set pw = ?, name = ?, tel = ? where id='" + dto.getId() + "'");
 
-//		PreparedStatement ps = con.prepareStatement("update member(id,pw,name,tel) value(?,?,?,?)");
+			// dtoë°›ì€ê°’ setString
+
+			ps.setInt(1, dto.getPw());
+			ps.setString(2, dto.getName());
+			ps.setString(3, dto.getTel());
+			ps.executeUpdate();
+			ps.close();
+			con.close();
+		}
 	}
 
-	public void delete(MemberDTO dto) throws Exception {
-		Class.forName("com.mysql.jdbc.Driver");
+	// delete DAO -- ë¡œê·¸ì¸í•œ idê°’ ë°›ì•„ì„œ íƒˆí‡´ê²°ì •
+	public void delete(String id) throws Exception {
+		// ì—°ê²°ë˜ë©´
+		if (connect()) {
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery", "root", "1234");
 
-		Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/member", "root", "1234");
+			// delete sqlê°’ ì„¤ì • preparestatement
+			PreparedStatement ps = con.prepareStatement("delete from member where id = '" + id + "'");
+			ps.executeUpdate();
 
-//		PreparedStatement ps = con.prepareStatement("delete from member where ");
+			ps.close();
+			con.close();
+		}
 	}
 
+	// compare DAO -- ID ì¤‘ë³µí™•ì¸
+	public boolean compare(String id) throws Exception {
+		// ê²€ìƒ‰ë˜ëŠ” ê°’ ìˆìœ¼ë©´ trueë¡œ ëŒë ¤ì¤„ compë³€ìˆ˜
+		boolean comp = false;
+
+		// ì—°ê²°ë˜ë©´
+		if (connect()) {
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery", "root", "1234");
+			java.sql.Statement ps = con.createStatement();
+
+			// select sqlì‹¤í–‰ë¬¸
+			String sql = "select * from member where id='" + id + "'";
+			rs = ps.executeQuery(sql); // ê²°ê³¼ê°’ì„ rsì— ëŒ€ì…
+			while (rs.next()) {
+				comp = true; // rsê°€ í•œë²ˆì´ë¼ë„ ëŒì•„ê°€ë©´ comp = true
+			}
+			ps.close();
+			con.close();
+		}
+		return comp;
+	}
 }
