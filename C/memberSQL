@@ -1,0 +1,6 @@
+create table board(
+number int(5) primary key auto_increment, title varchar(20), id varchar(20), content varchar(100)
+);
+
+insert into board(title,id,content) values('I feel so happy','Yang','야야야') 
+insert into board(title,id,content) values('','','')
