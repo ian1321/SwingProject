@@ -88,10 +88,14 @@ public class MainPage extends JFrame implements ActionListener {
 		button2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					if (textField.getText().equals("") || textField_1.getText().equals("")) {
-						JOptionPane.showMessageDialog(null, "다 입력해주세요", "경고", 0);
+					// ID,Pw가 공백일경우에
+					if (textField.getText().equals("") || textField_1.getText().equals("")
+							|| textField.getText().equals("  아이디") || textField_1.equals("  패스워드")) {
+						JOptionPane.showMessageDialog(null, "항목을 모두 입력해주세요");
+						// 공백은 아니지만 ID와 PW값이 틀릴때
 					} else if (new MemberDAO().select(textField.getText(), textField_1.getText()) == false) {
-						JOptionPane.showMessageDialog(null, "로그인 오류입니다. 아이디,패스워드를 확인하세요", "경고", 0);
+						JOptionPane.showMessageDialog(null, "아이디,패스워드를 확인하세요", "로그인 오류", 0);
+						// 정상적으로 로그인될때
 					} else if (new MemberDAO().select(textField.getText(), textField_1.getText()) == true) {
 						MemberDTO.SessionId = textField.getText(); // SessionId를 넘겨줌
 						new MyPage(); // myPage 호출
@@ -118,7 +122,9 @@ public class MainPage extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
+		// TODO Auto-generated method stub
+		
 	}
+
 
 }

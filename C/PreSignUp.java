@@ -35,8 +35,36 @@ public class PreSignUp extends JFrame {
 				textField.setText(null); // 클릭하면 공백
 			}
 		});
+		
+				// 로그인 레이블
+				JLabel lblNewLabel_1 = new JLabel("로그인");
+				lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
+				lblNewLabel_1.addMouseListener(new MouseAdapter() {
+					public void mouseClicked(MouseEvent arg0) {
+						try {
+							// ID,Pw가 공백일경우에
+							if (textField.getText().equals("") || textField_1.getText().equals("")
+									|| textField.getText().equals("  아이디") || textField_1.equals("  패스워드")) {
+								JOptionPane.showMessageDialog(null, "항목을 모두 입력해주세요");
+								// 공백은 아니지만 ID와 PW값이 틀릴때
+							} else if (new MemberDAO().select(textField.getText(), textField_1.getText()) == false) {
+								JOptionPane.showMessageDialog(null, "아이디,패스워드를 확인하세요", "로그인 오류", 0);
+								// 정상적으로 로그인될때
+							} else if (new MemberDAO().select(textField.getText(), textField_1.getText()) == true) {
+								MemberDTO.SessionId = textField.getText(); // SessionId를 넘겨줌
+								new MyPage(); // myPage 호출
+								dispose(); // 해당 창 닫기
+							}
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
+					}
+				});
+				lblNewLabel_1.setBackground(Color.ORANGE);
+				lblNewLabel_1.setBounds(71, 389, 323, 45);
+				getContentPane().add(lblNewLabel_1);
 		textField.setBounds(71, 255, 323, 45);
-		textField.setText("아이디");
+		textField.setText("  \uC544\uC774\uB514");
 		getContentPane().add(textField);
 		textField.setColumns(10);
 
@@ -49,43 +77,15 @@ public class PreSignUp extends JFrame {
 			}
 		});
 		textField_1.setBounds(71, 312, 323, 45);
-		textField_1.setText("비밀번호");
+		textField_1.setText("  \uD328\uC2A4\uC6CC\uB4DC");
 		textField_1.setColumns(10);
 		getContentPane().add(textField_1);
 
 		// 로고레이블
 		JLabel lblNewLabel = new JLabel("로고");
-		lblNewLabel.setBounds(181, 162, 125, 60);
+		lblNewLabel.setBounds(160, 162, 125, 60);
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		getContentPane().add(lblNewLabel);
-
-		// 로그인 레이블
-		JLabel lblNewLabel_1 = new JLabel("로그인");
-		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent arg0) {
-				try {
-					// ID,Pw가 공백일경우에
-					if (textField.getText().equals("") || textField_1.getText().equals("")) {
-						JOptionPane.showMessageDialog(null, "다 입력해주세요", "경고", 0);
-						// 공백은 아니지만 ID와 PW값이 틀릴때
-					} else if (new MemberDAO().select(textField.getText(), textField_1.getText()) == false) {
-						JOptionPane.showMessageDialog(null, "로그인 오류입니다. 아이디,패스워드를 확인하세요", "경고", 0);
-						// 정상적으로 로그인될때
-					} else if (new MemberDAO().select(textField.getText(), textField_1.getText()) == true) {
-						MemberDTO.SessionId = textField.getText(); // SessionId를 넘겨줌
-						MyPage my = new MyPage(); // myPage 호출
-						dispose(); // 해당 창 닫기
-					}
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-			}
-		});
-		lblNewLabel_1.setBackground(new Color(204, 0, 0));
-		lblNewLabel_1.setBounds(71, 389, 323, 45);
-		lblNewLabel_1.setIcon(new ImageIcon("D:\\\uC591\uCC2C\uC6B0\uD53D\uD53D\\088.png"));
-		getContentPane().add(lblNewLabel_1);
 
 		// 회원가입 레이블 -- 회원가입폼 넘어가는 action
 		JLabel lblNewLabel_2 = new JLabel("회원가입");
@@ -97,7 +97,6 @@ public class PreSignUp extends JFrame {
 		});
 		lblNewLabel_2.setBounds(273, 479, 121, 32);
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_2.setIcon(new ImageIcon("D:\\\uC591\uCC2C\uC6B0\uD53D\uD53D\\089.png"));
 		getContentPane().add(lblNewLabel_2);
 
 		// 요기요가 처음이신가요 레이블
@@ -118,7 +117,7 @@ public class PreSignUp extends JFrame {
 		label_1.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent arg0) {
 				MainPage main = new MainPage(); //처음페이지
-				dispose(); //닫
+				dispose(); //닫기
 			}
 		});
 		label_1.setBounds(12, 13, 106, 45);

@@ -27,18 +27,25 @@ public class SignUp extends JFrame {
 
 	// SignUp
 	public SignUp() {
+		getContentPane().setForeground(Color.WHITE);
 		// 프레임설정
 		setTitle("회원가입");
 		setSize(505, 647);
 		getContentPane().setLayout(null);
-
+		
+		//id중복확인 체크박스 - 사용자가 체크할 수 없음
+		JCheckBox chckbxNewCheckBox_1 = new JCheckBox("\uC0AC\uC6A9\uAC00\uB2A5");
+		chckbxNewCheckBox_1.setEnabled(false);
+		chckbxNewCheckBox_1.setBounds(387, 120, 90, 30);
+		getContentPane().add(chckbxNewCheckBox_1);
+		
 		// 중복확인버튼
 		JButton btnNewButton = new JButton("중복확인");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					// DAO.compare에 ID텍스트필드대입
-					if (textField.getText().equals(null) || textField.getText().equals("")) {
+					if (textField.getText().equals(null) || textField.getText().equals("") || textField.getText().equals("  아이디 입력")) {
 						JOptionPane.showMessageDialog(null, "아이디를 입력해주세요.", "알림", 0);
 					}
 					// 있을경우
@@ -47,7 +54,8 @@ public class SignUp extends JFrame {
 					}
 					// 없을경우
 					else {
-						JOptionPane.showMessageDialog(null, "사용 가능한 아이디입니다..", "알림", 0);
+						JOptionPane.showMessageDialog(null, "사용 가능한 아이디입니다.", "알림", 0);
+						chckbxNewCheckBox_1.setSelected(true);;
 					}
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
@@ -55,7 +63,8 @@ public class SignUp extends JFrame {
 				}
 			}
 		});
-		btnNewButton.setBounds(373, 181, 104, 43);
+			
+		btnNewButton.setBounds(387, 149, 90, 35);
 		getContentPane().add(btnNewButton);
 
 		// 회원정보입력 레이블
@@ -66,7 +75,6 @@ public class SignUp extends JFrame {
 		// 아이디입력 텍스트필드
 		textField = new JTextField();
 		textField.addMouseListener(new MouseAdapter() {
-			@Override
 			public void mouseClicked(MouseEvent e) {
 				textField.setText(null); // 클릭하면 공백
 			}
@@ -146,8 +154,10 @@ public class SignUp extends JFrame {
 		JCheckBox chckbxNewCheckBox = new JCheckBox("전체동의");
 		chckbxNewCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//약관과 수집동의 취소
 				checkBox.setSelected(false);
 				checkBox_1.setSelected(false);
+				//약관과 수집동의 동의
 				if (chckbxNewCheckBox.isSelected()) {
 					checkBox.setSelected(true);
 					checkBox_1.setSelected(true);
@@ -168,16 +178,26 @@ public class SignUp extends JFrame {
 							|| textField_2.getText().equals("") || textField_3.getText().equals("")
 							|| textField_4.getText().equals("")) {
 						JOptionPane.showMessageDialog(null, "모든 항목을 입력하세요", "알림", 0);
-					} else if (!checkBox.isSelected() || !checkBox_1.isEnabled()) {
-						JOptionPane.showMessageDialog(null, "약관에 동의해주세요", "알림", 0);
+					//항목 체크를 안했을때
+					} else if (!checkBox.isSelected() || !checkBox_1.isSelected()) {
+						JOptionPane.showMessageDialog(null, "약관에 동의해주세요");
+					} 
+					else if (!chckbxNewCheckBox_1.isSelected()) {
+						JOptionPane.showMessageDialog(null, "아이디 중복확인을 해주세요");
 					}
 					// 회원가입완료
 					else if (textField_1.getText().equals(textField_2.getText())) {
-						// 회원가입완료
-						new MemberDAO().create(new MemberDTO(textField.getText(),
-								Integer.parseInt(textField_2.getText()), textField_3.getText(), textField_4.getText()));
+						// dto객체에 값 대입
+						MemberDTO dto = new MemberDTO();
+						dto.setId(textField.getText());
+						dto.setPw(Integer.parseInt(textField_2.getText()));
+						dto.setName(textField_3.getText());
+						dto.setTel(textField_4.getText());
+						new MemberDAO().create(dto);
+		
 						JOptionPane.showMessageDialog(null, "회원가입이 완료되었습니다.", "알림", 0);
 						new MainPage(); // 메인페이지로 이동
+						dispose();
 					} else {
 						// 비밀번호가 재입력값과 다를때
 						JOptionPane.showMessageDialog(null, "비밀번호가 재입력과 다릅니다.", "알림", 0);
@@ -210,6 +230,8 @@ public class SignUp extends JFrame {
 		label_1.setHorizontalAlignment(SwingConstants.CENTER);
 		label_1.setBounds(12, 13, 106, 45);
 		getContentPane().add(label_1);
+		
+		
 
 		setVisible(true);
 

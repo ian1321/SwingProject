@@ -13,14 +13,7 @@ public class MemberDTO {
 		return "MemberDTO [id=" + id + ", pw=" + pw + ", name=" + name + ", tel=" + tel + "]";
 	}
 
-	//constructor 생성자 생성
-	public MemberDTO(String id, int pw, String name, String tel) {
-		super();
-		this.id = id;
-		this.pw = pw;
-		this.name = name;
-		this.tel = tel;
-	}
+	
 	
 	//constructor override
 	public MemberDTO() {

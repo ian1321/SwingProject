@@ -32,6 +32,7 @@ public class MyPage extends JFrame{
 		label_1.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				new MainPage(); //로고 클릭하면 메인페이지로
+				dispose();
 			}
 		});
 		label_1.setHorizontalAlignment(SwingConstants.CENTER);
@@ -56,7 +57,8 @@ public class MyPage extends JFrame{
 		JButton btnNewButton = new JButton("회원정보수정");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new updateMember();
+				new UpdateMember();
+				dispose();
 			}
 		});
 		btnNewButton.setBounds(65, 295, 142, 45);
@@ -72,7 +74,9 @@ public class MyPage extends JFrame{
 				if ( s == 0) {
 					try {
 						new MemberDAO().delete(MemberDTO.SessionId);
-						JOptionPane.showMessageDialog(null, MemberDTO.SessionId + "님 지금까지 이용해주셔서 감사합니다", "알림", 0);
+						JOptionPane.showMessageDialog(null, MemberDTO.SessionId + "님 지금까지 이용해주셔서 감사합니다");
+						new MainPage();
+						dispose();
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -94,6 +98,7 @@ public class MyPage extends JFrame{
 				try {
 					//게시판 메인화면 실행
 					new MainBoard();
+					dispose();
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -104,6 +109,11 @@ public class MyPage extends JFrame{
 		
 		//주문하러가기버튼 --이어지는곳
 		JButton button_1 = new JButton("주문하러가기");
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//휘령씨 part -->
+			}
+		});
 		button_1.setBounds(152, 521, 142, 45);
 		getContentPane().add(button_1);
 		

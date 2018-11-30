@@ -99,12 +99,12 @@ public class BoardDAO {
 	}
 
 	// 글 수정하기 위해 글 제목검색
-	public int countMyRow(String title) throws Exception {
+	public int countMyRow(Object number) throws Exception {
 		int count = 0;
 		if (connect()) {
 			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery", "root", "1234");
 
-			String sql = "select * from board where title = '" + title + "'";
+			String sql = "select * from board where number =" + number;
 
 			PreparedStatement ps = con.prepareStatement(sql);
 

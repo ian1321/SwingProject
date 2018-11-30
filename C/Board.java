@@ -83,28 +83,32 @@ public class Board extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				try {
-					if (new BoardDAO().countMyRow(textField.getText()) >0) {
+					//글 번호를 검색해서 글이 있다면 - 수정
+					if (new BoardDAO().countMyRow(BoardDTO.Upnumber) >0) {
 						BoardDTO dto = new BoardDTO();
 						new BoardDTO();
-						dto.setNumber(Integer.parseInt(BoardDTO.Upnumber));
+						dto.setNumber(Integer.parseUnsignedInt(BoardDTO.Upnumber));
 						dto.setTitle(textField.getText());
 						dto.setId(MemberDTO.SessionId);
 						dto.setContent(textPane.getText());
 						new BoardDAO().update(dto);
-						JOptionPane.showMessageDialog(null, "글수정을 완료했습니다. 수정합니다", "알림", 0);
+						JOptionPane.showMessageDialog(null, "글수정을 완료했습니다. 수정합니다");
+						BoardDTO.Upnumber=0 + "";
 						new MainBoard();
 						dispose();
 					}
 					//DAO.create 실행후 제목, 실행중ID, 텍스트내용 - 텍스트페인 dto개체로 전송
-					else {
+					//글번호를 검색해서 글이 없으면 작성
+					else if (new BoardDAO().countMyRow(BoardDTO.Upnumber) == 0){
 						BoardDTO dto = new BoardDTO();
 						dto.setTitle(textField.getText());
 						dto.setId( MemberDTO.SessionId);
 						dto.setContent(textPane.getText());
 						new BoardDAO().create(dto);
+						JOptionPane.showMessageDialog(null, "글을 작성했습니다.");
+						new MainBoard();
 						dispose(); //창닫기
 					}
-					
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}

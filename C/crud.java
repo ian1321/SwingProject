@@ -1,7 +1,7 @@
 package swing;
 
 import java.util.ArrayList;
-
+//CRUD인터페이스
 public interface crud {
 
 	Boolean select(String id, String pw) throws Exception;

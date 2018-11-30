@@ -31,7 +31,7 @@ public class MainBoard extends JFrame {
 
 	public MainBoard() throws Exception {
 		// 프레임설정
-		setTitle("È¸¿ø°¡ÀÔ");
+		setTitle("메인보드");
 		setSize(505, 647);
 		getContentPane().setLayout(null);
 
@@ -40,13 +40,14 @@ public class MainBoard extends JFrame {
 		label.setBounds(0, 0, 489, 74);
 		label.setIcon(new ImageIcon("D:\\\uC2A4\uC719\uC774\uBBF8\uC9C0\\001.png"));
 		getContentPane().add(label);
-
+		
 		// 요기요 로고
 		JLabel label_1 = new JLabel("");
 		label_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				new MyPage(); // 로고 클릭하면 마이페이지로 이동
+				dispose();
 			}
 		});
 		label_1.setBounds(12, 13, 106, 45);
