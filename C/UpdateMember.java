@@ -14,10 +14,10 @@ import java.awt.event.MouseEvent;
 
 public class UpdateMember extends JFrame{
 	//변수
-	private JTextField textField_1; //비밀번호변경
-	private JTextField textField_2; //비밀번호재입력
-	private JTextField textField_3; //이름입력
-	private JTextField textField_4; //전화번호입력
+	public JTextField textField_1; //비밀번호변경
+	public JTextField textField_2; //비밀번호재입력
+	public JTextField textField_3; //이름입력
+	public JTextField textField_4; //전화번호입력
 	
 	//updateMember
 	public UpdateMember() {

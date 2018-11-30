@@ -8,12 +8,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
-
-import com.mysql.jdbc.Statement;
 
 public class MemberDAO implements crud {
 	// 변수설정
@@ -26,7 +25,7 @@ public class MemberDAO implements crud {
 		try {
 			// 연결이 된다면 result = true
 			Class.forName("com.mysql.jdbc.Driver");
-			DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery", "root", "1234");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery", "root", "1234");
 			result = true;
 		} catch (Exception e) {
 			// 연결실패
@@ -39,8 +38,6 @@ public class MemberDAO implements crud {
 	public void create(MemberDTO dto) throws Exception {
 		// 연결이 된다면
 		if (connect()) {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery", "root", "1234");
-
 			// insert sql실행문
 			PreparedStatement ps = con.prepareStatement("insert into member(id,pw,name,tel) value(?,?,?,?)");
 			// setString으로 sql문에 설정
@@ -52,6 +49,8 @@ public class MemberDAO implements crud {
 			ps.executeUpdate();
 			ps.close();
 			con.close();
+		} else {
+			JOptionPane.showMessageDialog(null, "연결 실패");
 		}
 	}
 
@@ -62,11 +61,10 @@ public class MemberDAO implements crud {
 		Boolean login = false;
 		// 연결이 된다면
 		if (connect()) {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery", "root", "1234");
-			java.sql.Statement ps = con.createStatement();
 
 			// select sql실행문
 			String sql = "select * from member where id='" + id + "'";
+			PreparedStatement ps = con.prepareStatement(sql);
 			rs = ps.executeQuery(sql); // 결과값을 rs에 대입
 
 			// rs값이 있는만큼, 비밀번호와 같은지 비교
@@ -79,6 +77,8 @@ public class MemberDAO implements crud {
 			}
 			ps.close();
 			con.close();
+		} else {
+			JOptionPane.showMessageDialog(null, "연결 실패");
 		}
 		// true or false값을 반환
 		return login;
@@ -88,8 +88,6 @@ public class MemberDAO implements crud {
 	// update DAO -- dto값 받아서 해당 ID에 해당하는 업데이트
 	public void update(MemberDTO dto) throws Exception {
 		if (connect()) {
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery", "root", "1234");
-
 			// update sql값 설정 preparestatement
 			PreparedStatement ps = con
 					.prepareStatement("update member set pw = ?, name = ?, tel = ? where id='" + dto.getId() + "'");
@@ -102,6 +100,8 @@ public class MemberDAO implements crud {
 			ps.executeUpdate();
 			ps.close();
 			con.close();
+		} else {
+			JOptionPane.showMessageDialog(null, "연결 실패");
 		}
 	}
 
@@ -109,7 +109,6 @@ public class MemberDAO implements crud {
 	public void delete(String id) throws Exception {
 		// 연결되면
 		if (connect()) {
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery", "root", "1234");
 
 			// delete sql값 설정 preparestatement
 			PreparedStatement ps = con.prepareStatement("delete from member where id = '" + id + "'");
@@ -117,6 +116,8 @@ public class MemberDAO implements crud {
 
 			ps.close();
 			con.close();
+		} else {
+			JOptionPane.showMessageDialog(null, "연결 실패");
 		}
 	}
 
@@ -127,18 +128,42 @@ public class MemberDAO implements crud {
 
 		// 연결되면
 		if (connect()) {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery", "root", "1234");
-			java.sql.Statement ps = con.createStatement();
 
 			// select sql실행문
 			String sql = "select * from member where id='" + id + "'";
+			PreparedStatement ps = con.prepareStatement(sql);
 			rs = ps.executeQuery(sql); // 결과값을 rs에 대입
 			while (rs.next()) {
 				comp = true; // rs가 한번이라도 돌아가면 comp = true
 			}
 			ps.close();
 			con.close();
+		} else {
+			JOptionPane.showMessageDialog(null, "연결 실패");
 		}
 		return comp;
+	}
+
+	public ArrayList selectMine(String id) throws Exception {
+		ArrayList arr = new ArrayList();
+
+		if (connect()) {
+			String sql = "select * from member where id ='" + id + "'";
+
+			PreparedStatement ps = con.prepareStatement(sql);
+
+			rs = ps.executeQuery(sql); // 읽어오는거라 다르다 비교해 //리턴타입이 ResultSet
+			if (rs.next() || rs!=null) {
+			arr.add(rs.getInt("pw"));
+			arr.add(rs.getString("name"));
+			arr.add(rs.getString("tel"));
+			}
+			ps.close();
+			con.close();
+
+		} else {
+			JOptionPane.showMessageDialog(null, "연결 실패");
+		}
+		return arr;
 	}
 }

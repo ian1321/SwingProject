@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
 import javax.swing.Spring;
 
 public class BoardDAO {
@@ -34,7 +35,6 @@ public class BoardDAO {
 	public void create(BoardDTO dto) throws SQLException {
 		// 연결이 된다면
 		if (connect()) {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery", "root", "1234");
 
 			// sql실행문 -- 게시판의 제목, 사용중 id, 내용 보내기
 			PreparedStatement ps = con.prepareStatement("insert into board(title,id,content) value(?,?,?)");
@@ -45,6 +45,9 @@ public class BoardDAO {
 			ps.executeUpdate();
 			ps.close();
 			con.close();
+		} 
+		else {
+			JOptionPane.showMessageDialog(null, "연결실패");
 		}
 	}
 
@@ -52,7 +55,6 @@ public class BoardDAO {
 		ArrayList arr = new ArrayList();
 
 		if (connect()) {
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery", "root", "1234");
 
 			String sql = "select * from board";
 
@@ -70,6 +72,8 @@ public class BoardDAO {
 			ps.close();
 			con.close();
 
+		}else {
+			JOptionPane.showMessageDialog(null, "연결실패");
 		}
 		return arr;
 
@@ -79,7 +83,6 @@ public class BoardDAO {
 	public int countRow() throws Exception {
 		int count = 0;
 		if (connect()) {
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery", "root", "1234");
 
 			String sql = "select * from board";
 
@@ -94,6 +97,8 @@ public class BoardDAO {
 			ps.close();
 			con.close();
 
+		}else {
+			JOptionPane.showMessageDialog(null, "연결실패");
 		}
 		return count;
 	}
@@ -102,7 +107,6 @@ public class BoardDAO {
 	public int countMyRow(Object number) throws Exception {
 		int count = 0;
 		if (connect()) {
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery", "root", "1234");
 
 			String sql = "select * from board where number =" + number;
 
@@ -116,6 +120,8 @@ public class BoardDAO {
 			ps.close();
 			con.close();
 
+		}else {
+			JOptionPane.showMessageDialog(null, "연결실패");
 		}
 		return count;
 	}
@@ -126,7 +132,6 @@ public class BoardDAO {
 		ArrayList arr = new ArrayList();
 		// 연결이 된다면
 		if (connect()) {
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery", "root", "1234");
 			// sql문설정 select - 입력받은 id값
 			String sql = "select * from board where id ='" + id + "'";
 			PreparedStatement ps = con.prepareStatement(sql);
@@ -142,6 +147,8 @@ public class BoardDAO {
 			}
 			ps.close();
 			con.close();
+		}else {
+			JOptionPane.showMessageDialog(null, "연결실패");
 		}
 		return arr;
 
@@ -153,7 +160,6 @@ public class BoardDAO {
 		int countUp = 0;
 		// 연결되면
 		if (connect()) {
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery", "root", "1234");
 			String sql = "select * from board where id ='" + id + "'"; // 해당 ID값으로 select검색
 			PreparedStatement ps = con.prepareStatement(sql);
 			rs = ps.executeQuery(sql);
@@ -165,6 +171,8 @@ public class BoardDAO {
 			// preparestatement와 connection close
 			ps.close();
 			con.close();
+		}else {
+			JOptionPane.showMessageDialog(null, "연결실패");
 		}
 		return countUp;
 	}
@@ -173,7 +181,6 @@ public class BoardDAO {
 	public void delete(Object number) throws Exception {
 		// 연결이 되면
 		if (connect()) {
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery", "root", "1234");
 			String sql = "delete from board where number=" + number; // 해당 number값으로 select검색
 			PreparedStatement ps = con.prepareStatement(sql);
 
@@ -190,7 +197,6 @@ public class BoardDAO {
 		// 연결이 된다면
 		if (connect()) {
 			// 연결 sql설정
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery", "root", "1234");
 			String sql = "select * from board where number=" + number;// 해당 number값으로 select검색
 			PreparedStatement ps = con.prepareStatement(sql);
 			// Resultset에 ps결과값 설정
@@ -203,6 +209,8 @@ public class BoardDAO {
 				arr.add(rs.getString("number"));
 			}
 			ps.close();
+		}else {
+			JOptionPane.showMessageDialog(null, "연결실패");
 		}
 
 		return arr;
@@ -212,7 +220,6 @@ public class BoardDAO {
 	public void update(BoardDTO dto) throws Exception {
 		//연결이되면
 		if (connect()) {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery", "root", "1234");
 			String sql = "update board set title=?, content=? where number=?";
 			PreparedStatement ps = con.prepareStatement(sql);
 			//ps에 해당값 setString
@@ -223,6 +230,8 @@ public class BoardDAO {
 			ps.executeUpdate();
 			ps.close();
 			con.close();
+		}else {
+			JOptionPane.showMessageDialog(null, "연결실패");
 		}
 	}
 

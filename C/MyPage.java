@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 public class MyPage extends JFrame{
 	
@@ -57,7 +58,20 @@ public class MyPage extends JFrame{
 		JButton btnNewButton = new JButton("회원정보수정");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new UpdateMember();
+				
+				UpdateMember upM = new UpdateMember();
+				ArrayList arr;
+				try {
+					arr = new MemberDAO().selectMine(MemberDTO.SessionId);
+					upM.textField_1.setText(String.valueOf(arr.get(0)));
+					upM.textField_2.setText(String.valueOf(arr.get(0)));
+					upM.textField_3.setText((String) arr.get(1));
+					upM.textField_4.setText((String) arr.get(2));
+					dispose();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				dispose();
 			}
 		});
