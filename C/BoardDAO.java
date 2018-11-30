@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -22,7 +23,8 @@ public class BoardDAO {
 		try {
 			// 연결이 된다면 result = true
 			Class.forName("com.mysql.jdbc.Driver");
-			DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery", "root", "1234");
+			con =DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery", "root", "1234");
+			 //DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery?useUnicode=yes&characterEncoding=UTF-8", "root", "1234");
 			result = true;
 		} catch (Exception e) {
 			// 연결실패
@@ -55,10 +57,9 @@ public class BoardDAO {
 		ArrayList arr = new ArrayList();
 
 		if (connect()) {
-
+			
 			String sql = "select * from board";
-
-			PreparedStatement ps = con.prepareStatement(sql);
+			Statement ps = con.prepareStatement(sql);
 
 			rs = ps.executeQuery(sql); // 읽어오는거라 다르다 비교해 //리턴타입이 ResultSet
 
@@ -85,9 +86,8 @@ public class BoardDAO {
 		if (connect()) {
 
 			String sql = "select * from board";
-
 			PreparedStatement ps = con.prepareStatement(sql);
-
+			
 			rs = ps.executeQuery(sql); // 읽어오는거라 다르다 비교해 //리턴타입이 ResultSet
 
 			while (rs.next()) {
@@ -109,7 +109,7 @@ public class BoardDAO {
 		if (connect()) {
 
 			String sql = "select * from board where number =" + number;
-
+			
 			PreparedStatement ps = con.prepareStatement(sql);
 
 			rs = ps.executeQuery(sql); // 읽어오는거라 다르다 비교해 //리턴타입이 ResultSet
