@@ -6,6 +6,7 @@ public class BoardDTO {
 	private String id; //Id
 	private String title; //제목
 	private String content; //내용
+	private String fmenu; //외래키 foodlist의 menu
 	public static String Upnumber;
 	
 	//Constructor생성자

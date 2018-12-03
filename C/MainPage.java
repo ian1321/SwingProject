@@ -1,29 +1,14 @@
 package swing;
 
 import javax.swing.JFrame;
-import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
 import java.awt.Toolkit;
-import com.mysql.jdbc.PreparedStatement;
-
-import java.awt.Component;
-import java.awt.TextField;
-
 import javax.swing.SwingConstants;
 import java.awt.Color;
-import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Array;
-import java.security.interfaces.RSAKey;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;

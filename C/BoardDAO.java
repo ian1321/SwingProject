@@ -7,19 +7,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Vector;
-
 import javax.swing.JOptionPane;
-import javax.swing.Spring;
 
 public class BoardDAO {
 	// 변수설정
 	Connection con; // connection변수
 	private ResultSet rs; // preparestatement값 받을 resultset변수
-
+	boolean result; // 연결 결과 변수
+	
 	// 연결 메소드
 	private boolean connect() {
-		boolean result = false; // 연결 결과 변수
+		result = false;
 		try {
 			// 연결이 된다면 result = true
 			Class.forName("com.mysql.jdbc.Driver");

@@ -1,27 +1,21 @@
 package swing;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.JOptionPane;
 
 public class MemberDAO implements crud {
 	// 변수설정
 	Connection con; // 커넥션변수
 	private ResultSet rs; // 결과값 넣을 변수
-
+	private boolean result; /*연결결과값 변수*/
+	
 	// 연결 메소드
 	private boolean connect() {
-		boolean result = false; // 연결 결과 변수
+		result = false; // 연결 결과 변수
 		try {
 			// 연결이 된다면 result = true
 			Class.forName("com.mysql.jdbc.Driver");
