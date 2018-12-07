@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
-public class MemberDAO implements crud {
+public class MemberDAO implements Crud {
 	// 변수설정
 	Connection con; // 커넥션변수
 	private ResultSet rs; // 결과값 넣을 변수
@@ -19,7 +19,7 @@ public class MemberDAO implements crud {
 		try {
 			// 연결이 된다면 result = true
 			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery", "root", "1234");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery?useUnicode=true&characterEncoding=utf8", "root", "1234");
 			result = true;
 		} catch (Exception e) {
 			// 연결실패
@@ -138,9 +138,8 @@ public class MemberDAO implements crud {
 		return comp;
 	}
 
-	public ArrayList selectMine(String id) throws Exception {
-		ArrayList arr = new ArrayList();
-
+	public MemberDTO selectMine(String id) throws Exception {
+		MemberDTO dto = new MemberDTO();
 		if (connect()) {
 			String sql = "select * from member where id ='" + id + "'";
 
@@ -148,9 +147,10 @@ public class MemberDAO implements crud {
 
 			rs = ps.executeQuery(sql); // 읽어오는거라 다르다 비교해 //리턴타입이 ResultSet
 			if (rs.next() || rs!=null) {
-			arr.add(rs.getInt("pw"));
-			arr.add(rs.getString("name"));
-			arr.add(rs.getString("tel"));
+			dto.setId(rs.getString("id"));
+			dto.setPw(rs.getInt("pw"));
+			dto.setName(rs.getString("name"));
+			dto.setTel(rs.getString("tel"));
 			}
 			ps.close();
 			con.close();
@@ -158,6 +158,6 @@ public class MemberDAO implements crud {
 		} else {
 			JOptionPane.showMessageDialog(null, "연결 실패");
 		}
-		return arr;
+		return dto;
 	}
 }

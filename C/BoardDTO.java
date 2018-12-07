@@ -23,6 +23,14 @@ public class BoardDTO {
 	public int getNumber() {
 		return number;
 	}
+	public String getFmenu() {
+		return fmenu;
+	}
+
+	public void setFmenu(String fmenu) {
+		this.fmenu = fmenu;
+	}
+
 	public void setNumber(int number) {
 		this.number = number;
 	}
