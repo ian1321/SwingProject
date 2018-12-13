@@ -35,7 +35,7 @@ public class SignUpPanel extends JPanel {
 	public SignUpPanel() {
 		// 회원가입패널
 
-		setBounds(0, 0, 487, 592);
+		setBounds(0, 0, 493, 592);
 		setLayout(null);
 
 		signUpPLabel = new JLabel("");
@@ -49,23 +49,22 @@ public class SignUpPanel extends JPanel {
 							|| telTextField.getText().equals("") || securityTextField.getText().equals("")) {
 						JOptionPane.showMessageDialog(null, "모든 항목을 입력하세요", "알림", 0);
 						// 항목 체크를 안했을때
-					} else if (!useCheckBox.isSelected() || !infoCheckBox.isSelected()) {
-						JOptionPane.showMessageDialog(null, "약관에 동의해주세요");
+					} else if (!rpwTextField.getText().equals(pwTextField.getText())) {
+
+						// 비밀번호가 재입력값과 다를때
+						JOptionPane.showMessageDialog(null, " 비밀번호가 재입력과 다릅니다.");
+						pwAlarmLabel.setText("비밀번호가 재입력과 다릅니다");
+						pwAlarmLabel.setForeground(Color.red);
 					} else if (!dupleCheckBox.isSelected()) {
 						JOptionPane.showMessageDialog(null, "아이디 중복확인을 해주세요");
-					}
-					else if (!securityTextField.getText().equals("1518")) {
+					} else if (!useCheckBox.isSelected() || !infoCheckBox.isSelected()) {
+						JOptionPane.showMessageDialog(null, "약관에 동의해주세요");
+					}  else if (!securityTextField.getText().equals("1518")) {
 						JOptionPane.showMessageDialog(null, "시큐리티넘버가 다릅니다");
-					} 
+					}
 					// 회원가입완료
-					 else if (!rpwTextField.getText().equals(pwTextField.getText())) {
-
-							// 비밀번호가 재입력값과 다를때
-							JOptionPane.showMessageDialog(null, " 비밀번호가 재입력과 다릅니다.");
-							pwAlarmLabel.setText("비밀번호가 재입력과 다릅니다");
-							pwAlarmLabel.setForeground(Color.red);
-						}
-					else if (pwTextField.getText().equals(rpwTextField.getText()) || securityTextField.equals("1518")) {
+					 else if (pwTextField.getText().equals(rpwTextField.getText())
+							|| securityTextField.equals("1518")) {
 						// dto객체에 값 대입
 						MemberDTO dto = new MemberDTO();
 						dto.setId(idTextField.getText());
@@ -77,7 +76,7 @@ public class SignUpPanel extends JPanel {
 
 						MainPage.mainPagePanel.setVisible(true);
 						MainPage.signUpPanel.setVisible(false);
-						
+
 						MainPage.mainSubPanel.setVisible(true);
 						MainPage.useTermPanel.setVisible(false);
 						MainPage.infoTermPanel.setVisible(false);
@@ -118,7 +117,8 @@ public class SignUpPanel extends JPanel {
 				}
 			}
 		});
-		duplLabel.setIcon(new ImageIcon(SignUpPanel.class.getResource("/image/\uC911\uBCF5\uD655\uC778\uBC84\uD2BC.png")));
+		duplLabel.setIcon(
+				new ImageIcon(SignUpPanel.class.getResource("/image/\uC911\uBCF5\uD655\uC778\uBC84\uD2BC.png")));
 		duplLabel.setBounds(103, 81, 79, 25);
 		add(duplLabel);
 
@@ -128,7 +128,7 @@ public class SignUpPanel extends JPanel {
 		add(dupleCheckBox);
 
 		panel = new JPanel();
-		panel.setBounds(12, 417, 466, 105);
+		panel.setBounds(9, 417, 470, 110);
 		add(panel);
 		panel.setLayout(null);
 
@@ -164,9 +164,9 @@ public class SignUpPanel extends JPanel {
 
 		checkBoxLabel = new JLabel("");
 		checkBoxLabel.setIcon(new ImageIcon(SignUpPanel.class.getResource("/image/\uB3D9\uC758\uD328\uB110.png")));
-		checkBoxLabel.setBounds(0, 0, 466, 105);
+		checkBoxLabel.setBounds(0, 0, 470, 110);
 		panel.add(checkBoxLabel);
-		
+
 		useTermLabel = new JLabel("");
 		useTermLabel.addMouseListener(new MouseAdapter() {
 			@Override
@@ -178,7 +178,7 @@ public class SignUpPanel extends JPanel {
 		});
 		useTermLabel.setBounds(163, 36, 57, 15);
 		panel.add(useTermLabel);
-		
+
 		infoTermLabel = new JLabel("");
 		infoTermLabel.addMouseListener(new MouseAdapter() {
 			@Override
@@ -223,10 +223,10 @@ public class SignUpPanel extends JPanel {
 
 		JLabel signUpLabel = new JLabel();
 		signUpLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		signUpLabel.setBounds(0, 0, 490, 595);
+		signUpLabel.setBounds(0, 0, 500, 600);
 		add(signUpLabel);
-		signUpLabel
-				.setIcon(new ImageIcon(SignUpPanel.class.getResource("/image/\uD68C\uC6D0\uAC00\uC785\uD328\uB110.png")));
+		signUpLabel.setIcon(
+				new ImageIcon(SignUpPanel.class.getResource("/image/\uD68C\uC6D0\uAC00\uC785\uD328\uB110.png")));
 
 	}
 }

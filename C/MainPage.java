@@ -52,6 +52,7 @@ public class MainPage extends JFrame implements ActionListener {
 	static UpdatePanel updatePanel;
 	static LoginPanel loginPanel;
 	static BoardPanel boardPanel;
+
 	// 메인페이지
 	public MainPage() throws Exception {
 		// 기본프레임설정
@@ -59,13 +60,25 @@ public class MainPage extends JFrame implements ActionListener {
 		setTitle("메인페이지");
 		setSize(1318, 754);
 		getContentPane().setLayout(null);
+		
+		JPanel subPanel2 = new JPanel();
+		subPanel2.setBounds(800, 454, 470, 240);
+		getContentPane().add(subPanel2);
+		subPanel2.setLayout(null);
+		
+		JPanel mainSubPanel2 = new JPanel();
+		mainSubPanel2.setBounds(0, 0, 470, 240);
+		subPanel2.add(mainSubPanel2);
+		
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setIcon(new ImageIcon(MainPage.class.getResource("/image/추천패널.png")));
+		mainSubPanel2.add(lblNewLabel);
 
 		// 아이디패널
 		idPanel = new JPanel();
 		idPanel.setBounds(0, 76, 248, 139);
 		getContentPane().add(idPanel);
 		idPanel.setLayout(null);
-	
 
 		// 아이디입력패널
 		idInputPanel = new JPanel();
@@ -83,7 +96,7 @@ public class MainPage extends JFrame implements ActionListener {
 			}
 		});
 		SignUpButtonLabel
-				.setIcon(new ImageIcon("D:\\\uC2A4\uC719\uC774\uBBF8\uC9C0\\\uD68C\uC6D0\uAC00\uC785\uBC84\uD2BC.png"));
+				.setIcon(new ImageIcon(MainPage.class.getResource("/image/회원가입버튼.png")));
 		SignUpButtonLabel.setBounds(125, 97, 99, 34);
 		idInputPanel.add(SignUpButtonLabel);
 
@@ -106,6 +119,12 @@ public class MainPage extends JFrame implements ActionListener {
 						loginPanel = new LoginPanel();
 						idPanel.add(loginPanel);
 
+						infoTermPanel.setVisible(false);
+						subPanel.remove(infoTermPanel);
+						useTermPanel.setVisible(false);
+						subPanel.remove(useTermPanel);
+						mainPanel.remove(signUpPanel);
+						
 						loginPanel.setVisible(true);
 						idInputPanel.setVisible(false);
 						mainPagePanel.setVisible(true);
@@ -114,6 +133,19 @@ public class MainPage extends JFrame implements ActionListener {
 						myPagePanel.setVisible(true);
 						mainSubPanel.setVisible(false);
 						
+						
+
+						
+						String orderhistory = "onion";
+						String recommend[]=new RecommenderSystem().recommendScore(orderhistory);
+						MenuPanel[] mP = new MenuPanel[2];
+						mP[0] = new MenuPanel(recommend[0]);
+						mP[1] = new MenuPanel(recommend[1]);
+						RecommenderPanel rP = new RecommenderPanel(mP);
+						subPanel2.add(rP);
+						rP.setBounds(0,0,470,240);
+						rP.setVisible(true);
+						mainSubPanel2.setVisible(false);
 					}
 				} catch (Exception e1) {
 					e1.printStackTrace();
@@ -122,7 +154,7 @@ public class MainPage extends JFrame implements ActionListener {
 			}
 		});
 		loginButtonLabel
-				.setIcon(new ImageIcon("D:\\\uC2A4\uC719\uC774\uBBF8\uC9C0\\\uB85C\uADF8\uC778\uBC84\uD2BC.png"));
+				.setIcon(new ImageIcon(MainPage.class.getResource("/image/로그인버튼.png")));
 		loginButtonLabel.setBounds(24, 97, 89, 32);
 		idInputPanel.add(loginButtonLabel);
 
@@ -153,24 +185,23 @@ public class MainPage extends JFrame implements ActionListener {
 		idInputPanel.add(lblNewLabel_1);
 
 		subPanel = new JPanel();
-		subPanel.setBounds(796, 110, 467, 313);
+		subPanel.setBounds(800, 95, 470, 340);
 		getContentPane().add(subPanel);
 		subPanel.setLayout(null);
 		mainSubPanel = new JPanel();
-		mainSubPanel.setBounds(0, 0, 466, 312);
+		mainSubPanel.setBounds(0, 0, 470, 340);
 		subPanel.add(mainSubPanel);
 		mainSubPanel.setLayout(null);
 
 		lblNewLabel_2 = new JLabel("\uBA54\uC778\uC11C\uBE0C\uD328\uB110\uD398\uC774\uC9C0");
-		lblNewLabel_2.setBounds(0, 0, 466, 312);
+		lblNewLabel_2.setBounds(0, 0, 470, 340);
 		mainSubPanel.add(lblNewLabel_2);
 
 		infoTermPanel = new JPanel();
-		infoTermPanel.setBounds(0, 10, 467, 312);
+		infoTermPanel.setBounds(0, 0, 470, 340);
 		subPanel.add(infoTermPanel);
-		infoTermPanel.setLayout(null);
 		infoTermPanel.setVisible(false);
-		infoTermPanel.setBounds(0, 0, 466, 313);
+		infoTermPanel.setLayout(null);
 
 		infoTermTextPane = new JTextPane();
 		infoTermTextPane.setBounds(0, 0, 466, 313);
@@ -188,14 +219,14 @@ public class MainPage extends JFrame implements ActionListener {
 				+ "④ 회사는 개인정보처리방침의 지속적인 개선을 위하여 개인정보처리방침을 개정하는데 필요한 절차를 정하고 있습니다. 그리고 개인정보처리방침을 개정하는 경우 버전번호 등을 부여하여 개정된 사항을 귀하께서 쉽게 알아볼 수 있도록 하고 있습니다.");
 
 		infoTermScrollPane = new JScrollPane(infoTermTextPane);
-		infoTermScrollPane.setBounds(0, 0, 466, 313);
+		infoTermScrollPane.setBounds(0, 0, 470, 340);
 		infoTermPanel.add(infoTermScrollPane);
 
 		useTermPanel = new JPanel();
-		useTermPanel.setBounds(0, 0, 466, 312);
+		useTermPanel.setBounds(0, 0, 470, 340);
 		subPanel.add(useTermPanel);
-		useTermPanel.setLayout(null);
 		useTermPanel.setVisible(false);
+		useTermPanel.setLayout(null);
 
 		useTermTextPane = new JTextPane();
 
@@ -214,35 +245,37 @@ public class MainPage extends JFrame implements ActionListener {
 				+ "⑧ 본 약관에서 정의되지 않은 용어는 관련법령이 정하는 바에 따릅니다.");
 
 		useTermScrollPane = new JScrollPane(useTermTextPane);
-		useTermScrollPane.setBounds(3, 0, 466, 313);
+		useTermScrollPane.setBounds(0, 0, 470, 340);
 		useTermPanel.add(useTermScrollPane);
 
 		mainPanel = new JPanel();
 		mainPanel.setLayout(null);
-		mainPanel.setBounds(276, 110, 480, 583);
+		mainPanel.setBounds(270, 93, 500, 600);
 		getContentPane().add(mainPanel);
+		
+				mainPagePanel = new JPanel();
+				mainPagePanel.setBounds(0, 0, 500, 600);
+				mainPanel.add(mainPagePanel);
+						mainPagePanel.setLayout(null);
+				
+						// 메인레이블
+						mainLabel = new JLabel("");
+						mainLabel.setBounds(0, 0, 500, 600);
+						mainPagePanel.add(mainLabel);
+						mainLabel.setIcon(new ImageIcon(MainPage.class.getResource("/image/메인패널.png")));
 
 		boardPanel = new BoardPanel();
+		boardPanel.setSize(500, 600);
 		mainPanel.add(boardPanel);
 		boardPanel.setVisible(false);
-		
-		mainPagePanel = new JPanel();
-		mainPagePanel.setBounds(0, 0, 480, 592);
-		mainPanel.add(mainPagePanel);
-		
-				
-		// 메인레이블
-		mainLabel = new JLabel("");
-		mainPagePanel.add(mainLabel);
-		mainLabel.setIcon(new ImageIcon("D:\\\uC2A4\uC719\uC774\uBBF8\uC9C0\\\uBA54\uC778\uD398\uC774\uC9C0.png"));
 
 		signUpPanel = new SignUpPanel();
-		signUpPanel.setBounds(0, 0, 480, 595);
+		signUpPanel.setBounds(0, 0, 500, 600);
 		mainPanel.add(signUpPanel);
 		signUpPanel.setVisible(false);
 
 		// 배경화면 레이블
-		JLabel BackgroundLabel = new JLabel("New label");
+		JLabel BackgroundLabel = new JLabel("");
 		BackgroundLabel.setIcon(new ImageIcon(MainPage.class.getResource("/image/\uC624\uB9AC\uC9C0\uB110\uD3FC.png")));
 		BackgroundLabel.setBounds(0, 0, 1361, 711);
 		getContentPane().add(BackgroundLabel);

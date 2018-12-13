@@ -27,6 +27,7 @@ public class Board extends JFrame {
 	JComboBox comboBox_2;
 	JLabel lblNewLabel_4;
 	int grade = 0;
+
 	public void setTextField(Object o) {
 		this.textField.setText((String) o);
 		;
@@ -96,7 +97,7 @@ public class Board extends JFrame {
 						dto.setTitle(textField.getText());
 						dto.setId(MemberDTO.SessionId);
 						dto.setContent(textPane.getText());
-						dto.setFmenu((String)comboBox_2.getSelectedItem());
+						dto.setFmenu((String) comboBox_2.getSelectedItem());
 						new BoardDAO().update(dto);
 						JOptionPane.showMessageDialog(null, "글수정을 완료했습니다. 수정합니다");
 						BoardDTO.Upnumber = 0 + "";
@@ -110,7 +111,7 @@ public class Board extends JFrame {
 						dto.setTitle(textField.getText());
 						dto.setId(MemberDTO.SessionId);
 						dto.setContent(textPane.getText());
-						dto.setFmenu((String)comboBox_2.getSelectedItem());
+						dto.setFmenu((String) comboBox_2.getSelectedItem());
 						new BoardDAO().create(dto);
 						JOptionPane.showMessageDialog(null, "글을 작성했습니다.");
 						new MainBoard();
@@ -133,7 +134,7 @@ public class Board extends JFrame {
 		comboBox_1 = new JComboBox();
 		comboBox_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				JComboBox cb1 = (JComboBox) e.getSource();
 				int index = cb1.getSelectedIndex();
 				ArrayList arr1;
@@ -142,26 +143,26 @@ public class Board extends JFrame {
 				try {
 					switch (index) {
 					case 0:
-						if(indexCount == 0) {
+						if (indexCount == 0) {
 							indexCount++;
-						}else {
-							arr1 = new FoodListDAO().selectColumn("rest",comboBox_1.getSelectedItem());
-							menuC = new FoodListDAO().comboAdd(arr1,2);
+						} else {
+							arr1 = new FoodListDAO().selectColumn("rest", comboBox_1.getSelectedItem());
+							menuC = new FoodListDAO().comboAdd(arr1, 2);
 							for (int i = 0; i < menuC.length; i++) {
 								comboBox_2.addItem(menuC[i]);
 							}
 						}
 						break;
 					case 1:
-						arr1 = new FoodListDAO().selectColumn("rest",comboBox_1.getSelectedItem());
-						menuC = new FoodListDAO().comboAdd(arr1,2);
+						arr1 = new FoodListDAO().selectColumn("rest", comboBox_1.getSelectedItem());
+						menuC = new FoodListDAO().comboAdd(arr1, 2);
 						for (int i = 0; i < menuC.length; i++) {
 							comboBox_2.addItem(menuC[i]);
 						}
 						break;
 					case 2:
-						arr1 = new FoodListDAO().selectColumn("rest",comboBox_1.getSelectedItem());
-						menuC = new FoodListDAO().comboAdd(arr1,2);
+						arr1 = new FoodListDAO().selectColumn("rest", comboBox_1.getSelectedItem());
+						menuC = new FoodListDAO().comboAdd(arr1, 2);
 						for (int i = 0; i < menuC.length; i++) {
 							comboBox_2.addItem(menuC[i]);
 						}
@@ -193,14 +194,14 @@ public class Board extends JFrame {
 					switch (index) {
 					case 0:
 						arr = new FoodListDAO().selectColumn("sort", "chicken");
-						restC = new FoodListDAO().comboAdd(arr,1);
+						restC = new FoodListDAO().comboAdd(arr, 1);
 						for (int i = 0; i < restC.length; i++) {
 							comboBox_1.addItem(restC[i]);
 						}
 						break;
 					case 1:
 						arr = new FoodListDAO().selectColumn("sort", "pizza");
-						restC = new FoodListDAO().comboAdd(arr,1);
+						restC = new FoodListDAO().comboAdd(arr, 1);
 						for (int i = 0; i < restC.length; i++) {
 							comboBox_1.addItem(restC[i]);
 						}
@@ -208,7 +209,7 @@ public class Board extends JFrame {
 
 					case 2:
 						arr = new FoodListDAO().selectColumn("sort", "chinese");
-						restC = new FoodListDAO().comboAdd(arr,1);
+						restC = new FoodListDAO().comboAdd(arr, 1);
 						for (int i = 0; i < restC.length; i++) {
 							comboBox_1.addItem(restC[i]);
 						}
@@ -238,13 +239,13 @@ public class Board extends JFrame {
 		JLabel label_3 = new JLabel("메뉴");
 		label_3.setBounds(380, 86, 80, 18);
 		getContentPane().add(label_3);
-		
+
 		JPanel panel = new JPanel();
 		panel.setBounds(536, 39, 245, 45);
 		getContentPane().add(panel);
 		panel.setLayout(null);
-		
-		/*별 한개*/
+
+		/* 별 한개 */
 		JLabel lblNewLabel_3 = new JLabel("");
 		lblNewLabel_3.addMouseListener(new MouseAdapter() {
 			@Override
@@ -255,18 +256,18 @@ public class Board extends JFrame {
 		});
 		lblNewLabel_3.setBounds(0, 0, 48, 45);
 		panel.add(lblNewLabel_3);
-		
+
 		JLabel label_4 = new JLabel("");
 		label_4.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				lblNewLabel_4.setIcon(new ImageIcon("S2.png"));
-				grade =2;
+				grade = 2;
 			}
 		});
 		label_4.setBounds(48, 0, 48, 45);
 		panel.add(label_4);
-		
+
 		JLabel label_5 = new JLabel("");
 		label_5.addMouseListener(new MouseAdapter() {
 			@Override
@@ -277,30 +278,30 @@ public class Board extends JFrame {
 		});
 		label_5.setBounds(97, 0, 48, 45);
 		panel.add(label_5);
-		
+
 		JLabel label_6 = new JLabel("");
 		label_6.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				lblNewLabel_4.setIcon(new ImageIcon("S4.png"));
-				grade  = 4;
+				grade = 4;
 			}
 		});
 		label_6.setBounds(147, 0, 48, 45);
 		panel.add(label_6);
-		
+
 		JLabel label_7 = new JLabel("");
 		label_7.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				lblNewLabel_4.setIcon(new ImageIcon("S5.png"));
 				grade = 5;
-				
+
 			}
 		});
 		label_7.setBounds(196, 0, 48, 45);
 		panel.add(label_7);
-		
+
 		lblNewLabel_4 = new JLabel("New label");
 		lblNewLabel_4.setIcon(new ImageIcon("S0.png"));
 		lblNewLabel_4.setBounds(0, 0, 244, 45);

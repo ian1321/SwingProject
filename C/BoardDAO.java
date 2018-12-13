@@ -16,15 +16,18 @@ public class BoardDAO {
 	Connection con; // connection변수
 	private ResultSet rs; // preparestatement값 받을 resultset변수
 	boolean result; // 연결 결과 변수
-	
+
 	// 연결 메소드
 	private boolean connect() {
 		result = false;
 		try {
 			// 연결이 된다면 result = true
 			Class.forName("com.mysql.jdbc.Driver");
-			con =DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery?useUnicode=true&characterEncoding=utf8", "root", "1234");
-			//con =DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery?useUnicode=true&characterEncoding=UTF-8", "root", "1234");
+			con = DriverManager.getConnection(
+					"jdbc:mysql://localhost:3306/delivery?useUnicode=true&characterEncoding=utf8", "root", "1234");
+			// con
+			// =DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery?useUnicode=true&characterEncoding=UTF-8",
+			// "root", "1234");
 			result = true;
 		} catch (Exception e) {
 			// 연결실패
@@ -48,8 +51,7 @@ public class BoardDAO {
 			ps.executeUpdate();
 			ps.close();
 			con.close();
-		} 
-		else {
+		} else {
 			JOptionPane.showMessageDialog(null, "연결실패");
 		}
 	}
@@ -58,7 +60,7 @@ public class BoardDAO {
 		ArrayList arr = new ArrayList();
 		BoardDTO dto = new BoardDTO();
 		if (connect()) {
-			
+
 			String sql = "select * from board";
 			Statement ps = con.prepareStatement(sql);
 
@@ -76,7 +78,7 @@ public class BoardDAO {
 			ps.close();
 			con.close();
 
-		}else {
+		} else {
 			JOptionPane.showMessageDialog(null, "연결실패");
 		}
 		return arr;
@@ -90,7 +92,7 @@ public class BoardDAO {
 
 			String sql = "select * from board";
 			PreparedStatement ps = con.prepareStatement(sql);
-			
+
 			rs = ps.executeQuery(sql); // 읽어오는거라 다르다 비교해 //리턴타입이 ResultSet
 
 			while (rs.next()) {
@@ -100,7 +102,7 @@ public class BoardDAO {
 			ps.close();
 			con.close();
 
-		}else {
+		} else {
 			JOptionPane.showMessageDialog(null, "연결실패");
 		}
 		return count;
@@ -112,7 +114,7 @@ public class BoardDAO {
 		if (connect()) {
 
 			String sql = "select * from board where number =" + number;
-			
+
 			PreparedStatement ps = con.prepareStatement(sql);
 
 			rs = ps.executeQuery(sql); // 읽어오는거라 다르다 비교해 //리턴타입이 ResultSet
@@ -123,7 +125,7 @@ public class BoardDAO {
 			ps.close();
 			con.close();
 
-		}else {
+		} else {
 			JOptionPane.showMessageDialog(null, "연결실패");
 		}
 		return count;
@@ -137,11 +139,10 @@ public class BoardDAO {
 		// 연결이 된다면
 		if (connect()) {
 			// sql문설정 select - 입력받은 id값
-			String sql = "select * from board where '" + column + "' = '" + data + "'";
+			String sql = "select * from board where " + column + " = '" + data + "'";
 			PreparedStatement ps = con.prepareStatement(sql);
 			rs = ps.executeQuery(sql);
 
-			
 			// rs가 있는만큼 반복
 			while (rs.next()) {
 				// arr배열에 순서대로 number, title, id, content추가
@@ -155,7 +156,7 @@ public class BoardDAO {
 			}
 			ps.close();
 			con.close();
-		}else {
+		} else {
 			JOptionPane.showMessageDialog(null, "연결실패");
 		}
 		return arr;
@@ -179,13 +180,13 @@ public class BoardDAO {
 			// preparestatement와 connection close
 			ps.close();
 			con.close();
-		}else {
+		} else {
 			JOptionPane.showMessageDialog(null, "연결실패");
 		}
 		return countUp;
 	}
 
-	//클릭한 글 번호로 글 삭제하기
+	// 클릭한 글 번호로 글 삭제하기
 	public void delete(Object number) throws Exception {
 		// 연결이 되면
 		if (connect()) {
@@ -198,7 +199,7 @@ public class BoardDAO {
 		}
 	}
 
-	//글 수정하기 위해 글 번호로 검색해서 제목이랑 내용 가져오기
+	// 글 수정하기 위해 글 번호로 검색해서 제목이랑 내용 가져오기
 	public ArrayList recall(Object number) throws SQLException {
 		// 반환할 ArrayList생성
 		ArrayList arr = new ArrayList();
@@ -211,39 +212,40 @@ public class BoardDAO {
 			rs = ps.executeQuery(sql);
 
 			while (rs.next()) {
-				//ArrayList에 title, content, number순서대로 입력
+				// ArrayList에 title, content, number순서대로 입력
 				arr.add(rs.getString("title"));
 				arr.add(rs.getString("content"));
 				arr.add(rs.getString("number"));
 				arr.add(rs.getString("fMenu"));
 			}
 			ps.close();
-		}else {
+		} else {
 			JOptionPane.showMessageDialog(null, "연결실패");
 		}
 
 		return arr;
 	}
-	
-	//글 수정
+
+	// 글 수정
 	public void update(BoardDTO dto) throws Exception {
-		//연결이되면
+		// 연결이되면
 		if (connect()) {
 			String sql = "update board set title=?, content=? where number=?";
 			PreparedStatement ps = con.prepareStatement(sql);
-			//ps에 해당값 setString
+			// ps에 해당값 setString
 			ps.setString(1, dto.getTitle());
 			ps.setString(2, dto.getContent());
-			
+
 			ps.setInt(3, dto.getNumber());
-			//실행
+			// 실행
 			ps.executeUpdate();
 			ps.close();
 			con.close();
-		}else {
+		} else {
 			JOptionPane.showMessageDialog(null, "연결실패");
 		}
 	}
 
 	
+
 }

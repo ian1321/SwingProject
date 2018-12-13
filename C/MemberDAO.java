@@ -11,15 +11,16 @@ public class MemberDAO implements Crud {
 	// 변수설정
 	Connection con; // 커넥션변수
 	private ResultSet rs; // 결과값 넣을 변수
-	private boolean result; /*연결결과값 변수*/
-	
+	private boolean result; /* 연결결과값 변수 */
+
 	// 연결 메소드
 	private boolean connect() {
 		result = false; // 연결 결과 변수
 		try {
 			// 연결이 된다면 result = true
 			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery?useUnicode=true&characterEncoding=utf8", "root", "1234");
+			con = DriverManager.getConnection(
+					"jdbc:mysql://localhost:3306/delivery?useUnicode=true&characterEncoding=utf8", "root", "1234");
 			result = true;
 		} catch (Exception e) {
 			// 연결실패
@@ -146,11 +147,11 @@ public class MemberDAO implements Crud {
 			PreparedStatement ps = con.prepareStatement(sql);
 
 			rs = ps.executeQuery(sql); // 읽어오는거라 다르다 비교해 //리턴타입이 ResultSet
-			if (rs.next() || rs!=null) {
-			dto.setId(rs.getString("id"));
-			dto.setPw(rs.getInt("pw"));
-			dto.setName(rs.getString("name"));
-			dto.setTel(rs.getString("tel"));
+			if (rs.next() || rs != null) {
+				dto.setId(rs.getString("id"));
+				dto.setPw(rs.getInt("pw"));
+				dto.setName(rs.getString("name"));
+				dto.setTel(rs.getString("tel"));
 			}
 			ps.close();
 			con.close();
