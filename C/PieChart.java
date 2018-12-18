@@ -1,7 +1,9 @@
 package swing;
 
+import java.util.ArrayList;
+
 public class PieChart {
-	public String getPieChart() {
+	public String getPieChart(ArrayList<PieElement> list) {
 		String htmlString = "<html>\r\n" + 
 				"  <head>\r\n" + 
 				"    <script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>\r\n" + 
@@ -12,10 +14,11 @@ public class PieChart {
 				"      function drawChart() {\r\n" + 
 				"\r\n" + 
 				"        var data = google.visualization.arrayToDataTable([\r\n" + 
-				"          ['Task', 'Hours per Day'],\r\n" + 
-				"          ['Chicken',     11],\r\n" + 
-				"          ['Pizza',      2],\r\n" + 
-				"          ['Chinese',  2],\r\n" + 
+				"          ['항목', '수치'],\r\n";
+				for (int i = 0; i < list.size(); i++) {
+					htmlString += "['" + list.get(i).getName() + "', " + list.get(i).getValue() + "],\r\n";
+				}
+				htmlString += 
 				"        ]);\r\n" + 
 				"\r\n" + 
 				"        var options = {\r\n" + 

@@ -1,23 +1,24 @@
 package swing;
 
 public class MemberDTO {
-	// transfer할 값들
+	/*transfer할 값들*/
 	private String id; // id varchar(20)
 	private int pw; // pw int(20)
 	private String name; // name varchar(20)
 	private String tel; // tel varchar(20)
 	public static String SessionId; // 로그인한 아이디 변수값 static에 저장
 
-	// toString override
+	/*toString*/
 	public String toString() {
 		return "MemberDTO [id=" + id + ", pw=" + pw + ", name=" + name + ", tel=" + tel + "]";
 	}
 
-	// constructor override
+	/*constructor override*/
 	public MemberDTO() {
 		super();
 	}
 
+	/*getter/setter*/
 	public String getId() {
 		return id;
 	}

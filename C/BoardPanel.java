@@ -2,6 +2,7 @@ package swing;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -18,13 +19,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
+
 import javax.swing.JButton;
+import javax.swing.SwingConstants;
 
 public class BoardPanel extends JPanel {
 	private JTextField showTitleTextField;
 	JComboBox sortComboBox;
 	JComboBox restComboBox;
 	JComboBox menuComboBox;
+	int indexCount = 0;
 
 	public BoardPanel() throws Exception {
 		setBounds(0, 0, 487, 592);
@@ -65,9 +70,10 @@ public class BoardPanel extends JPanel {
 		jTable.getColumnModel().getColumn(3).setResizable(false);
 		jTable.getColumnModel().getColumn(3).setPreferredWidth(63);
 
-		JButton btnNewButton = new JButton("◀");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+		JLabel AllListLabel = new JLabel("");
+		AllListLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
 				menuComboBox.removeAllItems();
 				restComboBox.removeAllItems();
 				try {
@@ -105,16 +111,108 @@ public class BoardPanel extends JPanel {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-			}}
+			}
+		});
+
+		JLabel deleteNewLabel = new JLabel("");
+		deleteNewLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// 삭제하기기
+				// 선택한 행 가져오기
+				int sRow = jTable.getSelectedRow();
+				// 선택한 행의 2번째값 = ID 를 가져오기
+				String rowId = (String) jTable.getValueAt(sRow, 2);
+				// 아이디가 널값이거나 고른행의 아이디가 내 아이디랑 같지 않을때
+				if (MemberDTO.SessionId.equals(null) || !MemberDTO.SessionId.equals(rowId)) {
+					JOptionPane.showMessageDialog(null, "내 글이 아닙니다", "알림", 0);
+					// 아이디가 작성자 아이디와 같을때 삭제
+				} else if (MemberDTO.SessionId.equals(rowId)) {
+					// 삭제확인
+					int option = JOptionPane.showConfirmDialog(null, "정말 삭제하시겠습니까?");
+					if (option == 0) { // 예를 눌렀을때
+						try {
+							// 선택한 행의 글 넘버 가져와서 DAO.delete
+							new BoardDAO().delete(jTable.getValueAt(sRow, 0));
+							JOptionPane.showMessageDialog(null, "글이 삭제되었습니다.", "알림", 0);
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+				} else {
+					// 그 외에는 삭제 하지 않기
+					JOptionPane.showMessageDialog(null, "삭제 안하기를 선택하셨습니다.", "알림", 0);
+				}
+			}
+		}
+
 		);
-		btnNewButton.setBounds(428,94,47,27);
 
-	add(btnNewButton);
+		JLabel correctingLabel = new JLabel("");
+		correctingLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// 선택한 값의 id가져오기
+				int sRow = jTable.getSelectedRow();
+				String rowId = (String) jTable.getValueAt(sRow, 2);
+				// 선택한 값과 로그인한 아이디가 같지 않으면
+				if (MemberDTO.SessionId.equals(null) || !MemberDTO.SessionId.equals(rowId)) {
+					JOptionPane.showMessageDialog(null, "내 글이 아닙니다", "알림", 0);
+					// 아이디가 작성자 아이디와 같을때 수정
+				} else if (MemberDTO.SessionId.equals(rowId)) {
+					BoardDTO bDto = new BoardDTO();
+					try {
+						bDto = new BoardDAO().recall(jTable.getValueAt(sRow, 0));
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
+					BoardWritePanel boardWritePanel = new BoardWritePanel();
+					boardWritePanel.menuComboBox.addItem(bDto.getFmenu());
+					boardWritePanel.titleTextField.setText(bDto.getTitle());
+					boardWritePanel.textPane.setText(bDto.getContent());
+					
+					MainPage.mainPanel.add(boardWritePanel);
+					boardWritePanel.setVisible(true);
+					setVisible(false);
+				}
+			}
+		});
 
-	JScrollPane scrollPane = new JScrollPane(jTable);
-	scrollPane.setBounds(8, 167, 467, 325);
-	add(scrollPane);
+		JLabel writeLabel = new JLabel("");
+		writeLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				BoardWritePanel boardWritePanel = new BoardWritePanel();
+				MainPage.mainPanel.add(boardWritePanel);
+				boardWritePanel.setVisible(true);
+				setVisible(false);
+			}
+		});
+		
+		JButton btnNewButton = new JButton("리뷰게시판 끄기");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				setVisible(false);
+				
+			}
+		});
+		btnNewButton.setBounds(340, 12, 135, 27);
+		add(btnNewButton);
+		writeLabel.setBounds(8, 499, 92, 52);
+		add(writeLabel);
+		correctingLabel.setBounds(137, 499, 92, 52);
+		add(correctingLabel);
+		deleteNewLabel.setBounds(264, 499, 92, 52);
+		add(deleteNewLabel);
+		AllListLabel.setBounds(380, 499, 95, 52);
+		add(AllListLabel);
+
+		JScrollPane scrollPane = new JScrollPane(jTable);
+		scrollPane.setBounds(8, 167, 467, 325);
+		add(scrollPane);
 
 		String[] loc = { "서울", "경기", "강원" };
 		JComboBox locComboBox = new JComboBox(loc);
@@ -135,7 +233,7 @@ public class BoardPanel extends JPanel {
 						rowData1[i][1] = dto.getTitle();
 						rowData1[i][2] = dto.getId();
 						rowData1[i][3] = dto.getFmenu();
-						
+
 					}
 					jTable.setModel(new DefaultTableModel(rowData1, columnNames));
 					jTable.getColumnModel().getColumn(0).setResizable(false);
@@ -150,7 +248,7 @@ public class BoardPanel extends JPanel {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				; 
+				;
 
 			}
 
@@ -165,42 +263,41 @@ public class BoardPanel extends JPanel {
 				int index = cb1.getSelectedIndex();
 				ArrayList arr1;
 				String[] menuC;
-				int indexCount = 0;
+
 				FoodListDTO dto1 = new FoodListDTO();
-				try {
-					switch (index) {
-					case 0:
-						if (indexCount == 0) {
-							indexCount++;
-						} else {
+				if (indexCount == 0) {
+					indexCount++;
+				} else {
+					try {
+						switch (index) {
+						case 0:
+
 							arr1 = new FoodListDAO().selectColumn("rest", restComboBox.getSelectedItem());
 							for (int i = 0; i < arr1.size(); i++) {
 								dto1 = (FoodListDTO) arr1.get(i);
 								menuComboBox.addItem(dto1.getMenu());
 							}
+							break;
+						case 1:
+							arr1 = new FoodListDAO().selectColumn("rest", restComboBox.getSelectedItem());
+							for (int i = 0; i < arr1.size(); i++) {
+								dto1 = (FoodListDTO) arr1.get(i);
+								menuComboBox.addItem(dto1.getMenu());
+							}
+							break;
+						case 2:
+							arr1 = new FoodListDAO().selectColumn("rest", restComboBox.getSelectedItem());
+							for (int i = 0; i < arr1.size(); i++) {
+								dto1 = (FoodListDTO) arr1.get(i);
+								menuComboBox.addItem(dto1.getMenu());
+							}
+							break;
 						}
-						break;
-					case 1:
-						arr1 = new FoodListDAO().selectColumn("rest", restComboBox.getSelectedItem());
-						for (int i = 0; i < arr1.size(); i++) {
-							dto1 = (FoodListDTO) arr1.get(i);
-							menuComboBox.addItem(dto1.getMenu());
-						}
-						break;
-					case 2:
-						arr1 = new FoodListDAO().selectColumn("rest", restComboBox.getSelectedItem());
-						for (int i = 0; i < arr1.size(); i++) {
-							dto1 = (FoodListDTO) arr1.get(i);
-							menuComboBox.addItem(dto1.getMenu());
-						}
-						break;
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
 					}
-
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
 				}
-
 			}
 
 		});
@@ -285,6 +382,16 @@ public class BoardPanel extends JPanel {
 		backgroundLabel.setIcon(new ImageIcon(BoardPanel.class.getResource("/image/\uB9AC\uBDF0\uD328\uB110.png")));
 		backgroundLabel.setBounds(0, 0, 487, 592);
 		add(backgroundLabel);
+
+		JLabel editLabel = new JLabel("");
+		editLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+
+			}
+		});
+		editLabel.setBounds(135, 499, 92, 52);
+		add(editLabel);
 
 	}
 

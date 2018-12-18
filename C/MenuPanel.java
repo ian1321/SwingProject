@@ -8,9 +8,7 @@ import java.util.ArrayList;
 import java.awt.Font;
 
 public class MenuPanel extends JPanel{
-	String menu;
-	public MenuPanel(String m) throws Exception {
-		this.menu = m;
+	public MenuPanel(String menu) throws Exception {
 		RecommenderDAO rDao = new RecommenderDAO();
 		RecommenderDTO rDto = new RecommenderDTO();
 		FoodListDAO fDao = new FoodListDAO();
@@ -19,7 +17,7 @@ public class MenuPanel extends JPanel{
 		ArrayList<RecommenderDTO> arr = rDao.selectColumn("fMenu", menu);
 		rDto = arr.get(0);
 		
-		ArrayList<FoodListDTO> fArr = fDao.selectColumn("Menu", menu);
+		ArrayList<FoodListDTO> fArr = fDao.selectColumn("menu", menu);
 		fDto = fArr.get(0);
 		
 		
@@ -52,9 +50,5 @@ public class MenuPanel extends JPanel{
 		backgroundLabel.setBounds(0, 0, 220, 70);
 		add(backgroundLabel);
 		
-	}
-	@Override
-	public String toString() {
-		return "MenuPanel [menu=" + menu + "]";
 	}
 }

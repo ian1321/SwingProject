@@ -33,7 +33,6 @@ public class RecommenderDAO {
 		ArrayList<RecommenderDTO> arr = new ArrayList<RecommenderDTO>();
 		String object1 = (String) object;
 		RecommenderDTO dto;
-		int count =0;
 		if (connect()) {
 			
 			PreparedStatement ps = con.prepareStatement("select * from recommender where " + column + " = ?");
@@ -47,9 +46,7 @@ public class RecommenderDAO {
 				dto.setTaste(rs.getString("taste"));
 				dto.setScore(rs.getDouble("score"));
 				dto.setCount(rs.getInt("count"));
-				
 				arr.add(dto);
-				count++;
 			}
 		}
 
@@ -57,6 +54,18 @@ public class RecommenderDAO {
 
 	}
 
+	public void Update(double score, int count, String menu) throws Exception {
+		RecommenderDTO dto;
+		if (connect()) {
+			PreparedStatement ps = con.prepareStatement("update recommender set score = ?, count = ? where fMenu = ?");
+			ps.setDouble(1, score);
+			ps.setInt(2, count + 1);
+			ps.setString(3, menu);
+			ps.executeUpdate();
+			ps.close();
+		}
+
+	}
 	/*public ArrayList<RecommenderDTO> join(String column, Object object) throws Exception {
 		ArrayList<RecommenderDTO> arr = new ArrayList<RecommenderDTO>();
 		String object1 = (String) object;

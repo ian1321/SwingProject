@@ -5,7 +5,7 @@ import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 
 public class RecommenderPanel extends JPanel{
-	public RecommenderPanel(MenuPanel[] mP) {
+	public RecommenderPanel(MenuPanel[] mP, MenuPanel[] cP) {
 		setSize(470,240);
 		setLayout(null);
 		
@@ -14,7 +14,10 @@ public class RecommenderPanel extends JPanel{
 			mP[i].setBounds(240,(i+1)*80, 220, 70);
 		}
 		
-		
+		for (int i = 0; i < cP.length; i++) {
+			add(cP[i]); 
+			cP[i].setBounds(10,(i+1)*80,220,70);
+		}
 		
 		
 		JLabel backgroundLabel = new JLabel("");

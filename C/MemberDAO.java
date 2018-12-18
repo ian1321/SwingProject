@@ -8,39 +8,37 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 public class MemberDAO implements Crud {
-	// 변수설정
-	Connection con; // 커넥션변수
-	private ResultSet rs; // 결과값 넣을 변수
-	private boolean result; /* 연결결과값 변수 */
+	/* 변수설정 */
+	Connection con;
+	private ResultSet rs;
+	private boolean result;
 
-	// 연결 메소드
+	/* 연결 */
 	private boolean connect() {
-		result = false; // 연결 결과 변수
+		/* 결과값 */
+		result = false;
 		try {
-			// 연결이 된다면 result = true
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection(
 					"jdbc:mysql://localhost:3306/delivery?useUnicode=true&characterEncoding=utf8", "root", "1234");
+			/* 연결되면 true값 반환 */
 			result = true;
 		} catch (Exception e) {
-			// 연결실패
+			/* 실패시 오류메세지 */
 			System.out.println("연결 실패 : " + e.getMessage());
 		}
 		return result;
 	}
 
-	// create DAO -- 입력값 dto값 받아서 DB에 sql statement실행
+	/* Create - insert */
 	public void create(MemberDTO dto) throws Exception {
-		// 연결이 된다면
+		/* 연결되면 */
 		if (connect()) {
-			// insert sql실행문
-			PreparedStatement ps = con.prepareStatement("insert into member(id,pw,name,tel) value(?,?,?,?)");
-			// setString으로 sql문에 설정
+			PreparedStatement ps = con.prepareStatement("insert into member value(?,?,?,?)");
 			ps.setString(1, dto.getId());
 			ps.setInt(2, dto.getPw());
 			ps.setString(3, dto.getName());
 			ps.setString(4, dto.getTel());
-			// 실행
 			ps.executeUpdate();
 			ps.close();
 			con.close();
@@ -49,21 +47,17 @@ public class MemberDAO implements Crud {
 		}
 	}
 
-	// select DAO -- id, pw값 받아서 DB와 비교
+	/* Read - select */
 	public Boolean select(String id, String pw) throws Exception {
-
-		// 로그인이 되는지 검사하는 변수 boolean login
+		/* 반환값 */
 		Boolean login = false;
-		// 연결이 된다면
 		if (connect()) {
-
-			// select sql실행문
 			String sql = "select * from member where id='" + id + "'";
 			PreparedStatement ps = con.prepareStatement(sql);
 			rs = ps.executeQuery(sql); // 결과값을 rs에 대입
 
-			// rs값이 있는만큼, 비밀번호와 같은지 비교
-			while (rs.next() == true) {
+			while (rs.next()) {
+				/* rs column2와 입력값비교 */
 				if (rs.getString(2).equals(pw)) {
 					login = true;
 				} else {
@@ -75,20 +69,14 @@ public class MemberDAO implements Crud {
 		} else {
 			JOptionPane.showMessageDialog(null, "연결 실패");
 		}
-		// true or false값을 반환
 		return login;
-
 	}
 
-	// update DAO -- dto값 받아서 해당 ID에 해당하는 업데이트
+	/* Update - update */
 	public void update(MemberDTO dto) throws Exception {
 		if (connect()) {
-			// update sql값 설정 preparestatement
 			PreparedStatement ps = con
 					.prepareStatement("update member set pw = ?, name = ?, tel = ? where id='" + dto.getId() + "'");
-
-			// dto받은값 setString
-
 			ps.setInt(1, dto.getPw());
 			ps.setString(2, dto.getName());
 			ps.setString(3, dto.getTel());
@@ -100,15 +88,11 @@ public class MemberDAO implements Crud {
 		}
 	}
 
-	// delete DAO -- 로그인한 id값 받아서 탈퇴결정
+	/* Remove - delete */
 	public void delete(String id) throws Exception {
-		// 연결되면
 		if (connect()) {
-
-			// delete sql값 설정 preparestatement
 			PreparedStatement ps = con.prepareStatement("delete from member where id = '" + id + "'");
 			ps.executeUpdate();
-
 			ps.close();
 			con.close();
 		} else {
@@ -118,9 +102,8 @@ public class MemberDAO implements Crud {
 
 	// compare DAO -- ID 중복확인
 	public boolean compare(String id) throws Exception {
-		// 검색되는 값 있으면 true로 돌려줄 comp변수
+		/*반환값*/
 		boolean comp = false;
-
 		// 연결되면
 		if (connect()) {
 

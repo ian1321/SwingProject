@@ -200,9 +200,8 @@ public class BoardDAO {
 	}
 
 	// 글 수정하기 위해 글 번호로 검색해서 제목이랑 내용 가져오기
-	public ArrayList recall(Object number) throws SQLException {
-		// 반환할 ArrayList생성
-		ArrayList arr = new ArrayList();
+	public BoardDTO recall(Object number) throws SQLException {
+		BoardDTO dto = new BoardDTO();
 		// 연결이 된다면
 		if (connect()) {
 			// 연결 sql설정
@@ -211,19 +210,19 @@ public class BoardDAO {
 			// Resultset에 ps결과값 설정
 			rs = ps.executeQuery(sql);
 
-			while (rs.next()) {
+			if (rs.next()) {
 				// ArrayList에 title, content, number순서대로 입력
-				arr.add(rs.getString("title"));
-				arr.add(rs.getString("content"));
-				arr.add(rs.getString("number"));
-				arr.add(rs.getString("fMenu"));
+				dto.setTitle(rs.getString("title"));
+				dto.setContent(rs.getString("content"));
+				dto.setNumber(Integer.parseInt(rs.getString("number")));
+				dto.setFmenu(rs.getString("fMenu"));
 			}
 			ps.close();
 		} else {
 			JOptionPane.showMessageDialog(null, "연결실패");
 		}
 
-		return arr;
+		return dto;
 	}
 
 	// 글 수정

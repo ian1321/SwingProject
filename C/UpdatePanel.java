@@ -16,7 +16,7 @@ public class UpdatePanel extends JPanel {
 	static JTextField telTextField;
 
 	public UpdatePanel() {
-		setBounds(0, 0, 487, 592);
+		setBounds(0, 0, 500, 600);
 		setLayout(null);
 
 		rpwTextField = new JTextField();
@@ -51,7 +51,7 @@ public class UpdatePanel extends JPanel {
 
 			}
 		});
-		updateLabel.setBounds(12, 529, 466, 63);
+		updateLabel.setBounds(12, 541, 474, 51);
 		add(updateLabel);
 
 		telTextField = new JTextField();
@@ -78,7 +78,7 @@ public class UpdatePanel extends JPanel {
 		JLabel backgroundLabel = new JLabel("");
 		backgroundLabel.setIcon(
 				new ImageIcon(UpdatePanel.class.getResource("/image/\uD68C\uC6D0\uC218\uC815\uD328\uB110.png")));
-		backgroundLabel.setBounds(0, 0, 487, 592);
+		backgroundLabel.setBounds(0, 0, 500, 600);
 		add(backgroundLabel);
 
 	}

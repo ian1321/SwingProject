@@ -4,11 +4,14 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+
 import javax.swing.JButton;
 
 public class LoginPanel extends JPanel {
-	public LoginPanel() {
+	public LoginPanel() throws Exception {
 		setBounds(0, 0, 248, 139);
 		setLayout(null);
 		Calendar cal = Calendar.getInstance();
@@ -34,7 +37,8 @@ public class LoginPanel extends JPanel {
 		lblNewLabel_2.setBounds(95, 20, 153, 28);
 		add(lblNewLabel_2);
 
-		JLabel lblNewLabel_1 = new JLabel("\uB204\uC801 \uC8FC\uBB38 \uD69F\uC218 : ");
+		JLabel lblNewLabel_1 = new JLabel(
+				"\uB204\uC801 \uC8FC\uBB38 \uD69F\uC218 : " + new FileReadOrder().date(MemberDTO.SessionId).size());
 		lblNewLabel_1.setForeground(Color.WHITE);
 		lblNewLabel_1.setBounds(95, 81, 115, 15);
 		add(lblNewLabel_1);
