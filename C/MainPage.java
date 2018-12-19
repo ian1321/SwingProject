@@ -1,3 +1,11 @@
+/*경로
+ * MainPage => SignUpPanel
+ * 개요
+ * 정보를 입력받아 DB에 값 저장
+ * 사용DB
+ * Delivery - member Table
+ * */
+
 package swing;
 
 import javax.swing.JFrame;
@@ -12,12 +20,18 @@ import java.awt.Toolkit;
 import javax.swing.SwingConstants;
 import javax.xml.crypto.dsig.SignatureProperties;
 
+import com.teamdev.jxbrowser.chromium.Browser;
+
+import swing2.OrderMain;
+
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Random;
 import java.awt.Font;
@@ -28,6 +42,9 @@ import javax.swing.JPanel;
 import javax.swing.JCheckBox;
 import javax.swing.JTextPane;
 import java.awt.SystemColor;
+
+import swing2.FoodListDAO;
+import swing2.FoodListDTO;
 
 public class MainPage extends JFrame implements ActionListener {
 	/* 텍스트필드 */
@@ -59,7 +76,7 @@ public class MainPage extends JFrame implements ActionListener {
 	/* 사용자패널 */
 	static SignUpPanel signUpPanel;
 	static UpdatePanel updatePanel;
-	static LoginPanel loginPanel;
+	static public LoginPanel loginPanel;
 	static BoardPanel boardPanel;
 	JLabel show1Label;
 	JLabel show2Label;
@@ -82,19 +99,24 @@ public class MainPage extends JFrame implements ActionListener {
 		setSize(1318, 754);
 		getContentPane().setLayout(null);
 
-		/*-----------------------아이디패널 설정-----------------------*/
+		/*-----------------------서브패널2 설정-----------------------*/
+		/* 서브패널2 */
 		subPanel2 = new JPanel();
 		subPanel2.setBounds(800, 454, 470, 240);
 		getContentPane().add(subPanel2);
 		subPanel2.setLayout(null);
+		/* sub2 - 첫번째패널 */
 		mainSubPanel2 = new JPanel();
 		mainSubPanel2.setBounds(0, 0, 470, 240);
 		subPanel2.add(mainSubPanel2);
 		mainSubPanel2.setLayout(null);
+		/* sub2 - 첫번째패널레이블 */
 		JLabel mainSubPanel2Label = new JLabel("");
 		mainSubPanel2Label.setBounds(0, 0, 470, 240);
 		mainSubPanel2Label.setIcon(new ImageIcon(MainPage.class.getResource("/image/subPanel2Image.png")));
 		mainSubPanel2.add(mainSubPanel2Label);
+
+		/*-----------------------아이디패널 설정-----------------------*/
 		idPanel = new JPanel();
 		idPanel.setBounds(0, 76, 248, 139);
 		getContentPane().add(idPanel);
@@ -122,6 +144,14 @@ public class MainPage extends JFrame implements ActionListener {
 					} else if (new MemberDAO().select(textField.getText(), passwordField.getText()) == true) {
 						MemberDTO.SessionId = textField.getText(); // SessionId를 넘겨줌
 
+						/*주문기록 가져올 아이디생성*/
+						File file = new File(MemberDTO.SessionId+".txt");
+						if(!file.exists()) {
+						FileWriter fw = new FileWriter(file);
+						fw.write(MemberDTO.SessionId + "님의 주문기록\r\n");
+						fw.flush();
+						fw.close();
+						}
 						/* Collaborative Filtering */
 						int[] sort = new int[3];
 						ArrayList<FoodListDTO> arr = new FileReadOrder().history(MemberDTO.SessionId);
@@ -197,6 +227,18 @@ public class MainPage extends JFrame implements ActionListener {
 				}
 			}
 		});
+		
+		JLabel lblPw = new JLabel("PW");
+		lblPw.setForeground(Color.WHITE);
+		lblPw.setFont(new Font("맑은 고딕", Font.PLAIN, 19));
+		lblPw.setBounds(24, 57, 45, 18);
+		idInputPanel.add(lblPw);
+		
+		JLabel id = new JLabel("ID");
+		id.setFont(new Font("맑은 고딕", Font.PLAIN, 19));
+		id.setForeground(Color.WHITE);
+		id.setBounds(24, 17, 45, 18);
+		idInputPanel.add(id);
 		loginButtonLabel.setIcon(new ImageIcon(MainPage.class.getResource("/image/로그인버튼.png")));
 		loginButtonLabel.setBounds(24, 97, 89, 32);
 		idInputPanel.add(loginButtonLabel);
@@ -226,11 +268,14 @@ public class MainPage extends JFrame implements ActionListener {
 			}
 		});
 		textField.setForeground(Color.LIGHT_GRAY);
-		textField.setText("  아이디");
+		/* 아이디설정 */
+		textField.setText("");
 		/* id - 비밀번호 입력 텍스트필드 */
 		passwordField = new JPasswordField();
 		passwordField.setBounds(87, 53, 149, 32);
+		passwordField.setText("");
 		idInputPanel.add(passwordField);
+
 		/* id - 배경레이블 */
 		idInputPanelLabel = new JLabel("");
 		idInputPanelLabel
@@ -254,6 +299,7 @@ public class MainPage extends JFrame implements ActionListener {
 		rightLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				/* count에 변하여 .PNG로 이미지 세팅 */
 				if (count < 4) {
 					count++;
 				} else if (count == 4) {
@@ -279,7 +325,7 @@ public class MainPage extends JFrame implements ActionListener {
 				}
 			}
 		});
-		 /*메인 - 왼쪽으로 그림이동*/
+		/* 메인 - 왼쪽으로 그림이동 */
 		leftLabel = new JLabel("");
 		leftLabel.addMouseListener(new MouseAdapter() {
 			@Override
@@ -317,7 +363,18 @@ public class MainPage extends JFrame implements ActionListener {
 		mainPagePanel.add(rightLabel);
 		/* 메인 - 주문하기이미지 */
 		JLabel mainLabel2 = new JLabel();
-		mainLabel2.setIcon(new ImageIcon(MainPage.class.getResource("/image/MainPanelImage.jpg")));
+		mainLabel2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if (MemberDTO.SessionId == null) {
+					JOptionPane.showMessageDialog(null, "로그인을 해주세요");
+				} else {
+					new OrderMain();
+					dispose();
+				}
+			}
+		});
+		mainLabel2.setIcon(new ImageIcon(MainPage.class.getResource("/image/Main" + "PanelImage.jpg")));
 		mainLabel2.setBounds(10, 310, 480, 280);
 		mainPagePanel.add(mainLabel2);
 		/* 메인 - 왼쪽이미지 */
@@ -338,12 +395,12 @@ public class MainPage extends JFrame implements ActionListener {
 		show3Label.setIcon(new ImageIcon(MainPage.class.getResource("/image/M2.PNG")));
 		show3Label.setBounds(228, 75, 52, 210);
 		mainPagePanel.add(show3Label);
-		 /*메인 - 메인백그라운드이미지*/
+		/* 메인 - 메인백그라운드이미지 */
 		mainLabel = new JLabel("");
 		mainLabel.setBounds(0, 0, 500, 600);
 		mainPagePanel.add(mainLabel);
 		mainLabel.setIcon(new ImageIcon(MainPage.class.getResource("/image/메인패널.png")));
-		 /*메인 - 리뷰패널*/
+		/* 메인 - 리뷰패널 */
 		boardPanel = new BoardPanel();
 		boardPanel.setSize(500, 600);
 		mainPanel.add(boardPanel);
@@ -355,28 +412,28 @@ public class MainPage extends JFrame implements ActionListener {
 		signUpPanel.setVisible(false);
 
 		/*-----------------------서브패널 설정-----------------------*/
-		/*서브1패널*/
+		/* 서브1패널 */
 		subPanel = new JPanel();
 		subPanel.setBounds(800, 95, 470, 340);
 		getContentPane().add(subPanel);
 		subPanel.setLayout(null);
-		/*서브1 - 첫번째패널*/
+		/* 서브1 - 첫번째패널 */
 		mainSubPanel = new JPanel();
 		mainSubPanel.setBounds(0, 0, 470, 340);
 		subPanel.add(mainSubPanel);
 		mainSubPanel.setLayout(null);
-		/*서브1 - 첫번째레이블*/
+		/* 서브1 - 첫번째레이블 */
 		mainSubPanelLabel = new JLabel("\uBA54\uC778\uC11C\uBE0C\uD328\uB110\uD398\uC774\uC9C0");
 		mainSubPanelLabel.setIcon(new ImageIcon(MainPage.class.getResource("/image/MainSubPanelImage.jpg")));
 		mainSubPanelLabel.setBounds(0, 0, 470, 340);
 		mainSubPanel.add(mainSubPanelLabel);
-		/*이용약관패널*/
+		/* 이용약관패널 */
 		useTermPanel = new JPanel();
 		useTermPanel.setBounds(0, 0, 470, 340);
 		subPanel.add(useTermPanel);
 		useTermPanel.setVisible(false);
 		useTermPanel.setLayout(null);
-		/*이용약관 textPane*/
+		/* 이용약관 textPane */
 		useTermTextPane = new JTextPane();
 		useTermTextPane.setBounds(0, 0, 458, 411);
 		useTermTextPane.setText("요기요 이용약관\r\n" + "제1조 (목적)\r\n"
@@ -390,17 +447,17 @@ public class MainPage extends JFrame implements ActionListener {
 				+ "⑥ “가맹점”이란 회사와 가맹계약을 맺고 정보통신단말기를 설치하여 회사가 운영하는 요기요서비스에서 음식물을 공급하는 사업자를 말하며, 회사의 대리인이나 피용자로 간주되지 아니합니다.\r\n"
 				+ "⑦ “쿠폰”이란 요기요서비스에서 명시된 금액 혹은 비율만큼 할인을 받을 수 있는 일련의 숫자 및 영문자로 되어 있는 코드를 말합니다.\r\n"
 				+ "⑧ 본 약관에서 정의되지 않은 용어는 관련법령이 정하는 바에 따릅니다.");
-		/*이용스크롤*/
+		/* 이용스크롤 */
 		useTermScrollPane = new JScrollPane(useTermTextPane);
 		useTermScrollPane.setBounds(0, 0, 470, 340);
 		useTermPanel.add(useTermScrollPane);
-		/*개인정보패널*/
+		/* 개인정보패널 */
 		infoTermPanel = new JPanel();
 		infoTermPanel.setBounds(0, 0, 470, 340);
 		subPanel.add(infoTermPanel);
 		infoTermPanel.setVisible(false);
 		infoTermPanel.setLayout(null);
-		/*개인정보텍스트*/
+		/* 개인정보텍스트 */
 		infoTermTextPane = new JTextPane();
 		infoTermTextPane.setBounds(0, 0, 466, 313);
 		infoTermTextPane.setText("개인정보 처리방침\r\n" + "유한회사 딜리버리히어로 코리아(이하 ‘회사’라고 합니다)의 개인정보 처리방침은 아래의 내용을 담고 있습니다.\r\n"
@@ -414,12 +471,10 @@ public class MainPage extends JFrame implements ActionListener {
 				+ "② 회사는 귀하의 개인정보보호를 매우 중요시하며, 『개인정보보호법』, 『정보통신망 이용촉진 및 정보보호에 관한 법률』 상의 개인정보보호규정 및 정보통신부가 제정한 『개인정보보호지침』을 준수하고 있습니다. 회사는 개인정보처리방침을 통하여 귀하께서 제공하시는 개인정보가 어떠한 용도와 방식으로 이용되고 있으며 개인정보보호를 위해 어떠한 조치가 취해지고 있는지 알려드립니다.\r\n"
 				+ "③ 회사는 개인정보처리방침을 홈페이지 첫 화면에 공개함으로써 귀하께서 언제나 용이하게 보실 수 있도록 조치하고 있습니다.\r\n"
 				+ "④ 회사는 개인정보처리방침의 지속적인 개선을 위하여 개인정보처리방침을 개정하는데 필요한 절차를 정하고 있습니다. 그리고 개인정보처리방침을 개정하는 경우 버전번호 등을 부여하여 개정된 사항을 귀하께서 쉽게 알아볼 수 있도록 하고 있습니다.");
-		/*개인정보스크롤*/
+		/* 개인정보스크롤 */
 		infoTermScrollPane = new JScrollPane(infoTermTextPane);
 		infoTermScrollPane.setBounds(0, 0, 470, 340);
 		infoTermPanel.add(infoTermScrollPane);
-
-		/*-----------------------서브패널2 설정-----------------------*/
 
 		/* 버튼레이블 */
 		/* 리뷰버튼 레이블 */
