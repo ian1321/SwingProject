@@ -28,7 +28,7 @@ import java.awt.Color;
 
 public class BoardPanel extends JPanel {
 	/* 변수 */
-	private JTextField showTitleTextField;
+	private JTextField showTitleTextField; //제목
 	JComboBox<String> sortComboBox; // 종류
 	JComboBox<Object> restComboBox; // 레스토랑
 	JComboBox<Object> menuComboBox; // 메뉴
@@ -88,7 +88,7 @@ public class BoardPanel extends JPanel {
 					arr = new BoardDAO().select();
 					BoardDTO dto = new BoardDTO();
 					Object rowData[][] = new Object[arr.size()][4]; // count값으로 Object2차배열 값 설정
-
+					/*테이블값입력*/
 					for (int i = 0; i < arr.size(); i++) {
 						dto = arr.get(i);
 						rowData[i][0] = dto.getNumber();
@@ -96,6 +96,7 @@ public class BoardPanel extends JPanel {
 						rowData[i][2] = dto.getId();
 						rowData[i][3] = dto.getFmenu();
 					}
+					/*위치설정*/
 					JTable jTable = new JTable();
 					jTable.setModel(new DefaultTableModel(rowData, columnNames));
 					jTable.getColumnModel().getColumn(0).setResizable(false);
@@ -150,7 +151,7 @@ public class BoardPanel extends JPanel {
 
 		);
 
-		/*수정*/
+		/* 수정 */
 		JLabel correctingLabel = new JLabel("");
 		correctingLabel.addMouseListener(new MouseAdapter() {
 			@Override
@@ -170,31 +171,31 @@ public class BoardPanel extends JPanel {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					/*수정할값 BoardWritePanel에 불러오기*/
+					/* 수정할값 BoardWritePanel에 불러오기 */
 					BoardWritePanel boardWritePanel = new BoardWritePanel();
 					boardWritePanel.menuComboBox.addItem(bDto.getFmenu());
 					boardWritePanel.titleTextField.setText(bDto.getTitle());
 					boardWritePanel.textPane.setText(bDto.getContent());
-					/*setvisible*/
+					/* setvisible */
 					MainPage.mainPanel.add(boardWritePanel);
 					boardWritePanel.setVisible(true);
 					setVisible(false);
 				}
 			}
 		});
-		/*글쓰기*/
+		/* 글쓰기 */
 		JLabel writeLabel = new JLabel("");
 		writeLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent write) {
-				/*글쓰기panel*/
+				/* 글쓰기panel */
 				BoardWritePanel boardWritePanel = new BoardWritePanel();
 				MainPage.mainPanel.add(boardWritePanel);
 				boardWritePanel.setVisible(true);
 				setVisible(false);
 			}
 		});
-		/*종료*/
+		/* 종료 */
 		JButton btnNewButton = new JButton("X");
 		btnNewButton.setForeground(Color.WHITE);
 		btnNewButton.setBackground(Color.RED);
@@ -204,8 +205,13 @@ public class BoardPanel extends JPanel {
 				MainPage.mainPagePanel.setVisible(true);
 			}
 		});
+
+		/*수정*/
+		JLabel editLabel = new JLabel("");
+		editLabel.setBounds(135, 499, 92, 52);
+		add(editLabel);
 		
-		/*위치설정*/
+		/* 위치설정 */
 		btnNewButton.setBounds(421, 0, 54, 27);
 		add(btnNewButton);
 		writeLabel.setBounds(8, 499, 92, 52);
@@ -216,24 +222,27 @@ public class BoardPanel extends JPanel {
 		add(deleteNewLabel);
 		AllListLabel.setBounds(380, 499, 95, 52);
 		add(AllListLabel);
-		/*스크롤 - jTable*/
+		/* 스크롤 - jTable */
 		JScrollPane scrollPane = new JScrollPane(jTable);
 		scrollPane.setBounds(8, 167, 467, 325);
 		add(scrollPane);
 
-		/*콤보박스*/
+		/* 지역콤보박스 */
 		String[] loc = { "서울", "경기", "강원" };
 		JComboBox<Object> locComboBox = new JComboBox<Object>(loc);
 		locComboBox.setBounds(91, 56, 92, 24);
 		add(locComboBox);
-		
+
+		/* 메뉴콤보박스 */
 		menuComboBox = new JComboBox<Object>();
 		menuComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent menu) {
 				try {
+					/* 테이블에 해당메뉴값 */
 					ArrayList<BoardDTO> arr1 = new BoardDAO().selectMine("fmenu", menuComboBox.getSelectedItem());
 					Object[][] rowData1 = new Object[arr1.size()][4]; // 테이블 row에 넣을 Object2차 배열
 					BoardDTO dto = new BoardDTO();
+					/* 테이블값 설정 */
 					for (int i = 0; i < arr1.size(); i++) {
 						dto = arr1.get(i);
 						rowData1[i][0] = dto.getNumber();
@@ -241,6 +250,7 @@ public class BoardPanel extends JPanel {
 						rowData1[i][2] = dto.getId();
 						rowData1[i][3] = dto.getFmenu();
 					}
+					/* 테이블위치 */
 					jTable.setModel(new DefaultTableModel(rowData1, columnNames));
 					jTable.getColumnModel().getColumn(0).setResizable(false);
 					jTable.getColumnModel().getColumn(0).setPreferredWidth(34);
@@ -251,7 +261,6 @@ public class BoardPanel extends JPanel {
 					jTable.getColumnModel().getColumn(3).setResizable(false);
 					jTable.getColumnModel().getColumn(3).setPreferredWidth(63);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -259,6 +268,7 @@ public class BoardPanel extends JPanel {
 		menuComboBox.setBounds(395, 56, 80, 24);
 		add(menuComboBox);
 
+		/* 레스토랑 설정 */
 		restComboBox = new JComboBox();
 		restComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent rest) {
@@ -266,59 +276,39 @@ public class BoardPanel extends JPanel {
 				int index = cb1.getSelectedIndex();
 				ArrayList arr1;
 				String[] menuC;
-
 				FoodListDTO dto1 = new FoodListDTO();
 				if (indexCount == 0) {
 					indexCount++;
 				} else {
 					try {
-						switch (index) {
-						case 0:
-
-							arr1 = new FoodListDAO().selectColumn("rest", restComboBox.getSelectedItem());
-							for (int i = 0; i < arr1.size(); i++) {
-								dto1 = (FoodListDTO) arr1.get(i);
-								menuComboBox.addItem(dto1.getMenu());
-							}
-							break;
-						case 1:
-							arr1 = new FoodListDAO().selectColumn("rest", restComboBox.getSelectedItem());
-							for (int i = 0; i < arr1.size(); i++) {
-								dto1 = (FoodListDTO) arr1.get(i);
-								menuComboBox.addItem(dto1.getMenu());
-							}
-							break;
-						case 2:
-							arr1 = new FoodListDAO().selectColumn("rest", restComboBox.getSelectedItem());
-							for (int i = 0; i < arr1.size(); i++) {
-								dto1 = (FoodListDTO) arr1.get(i);
-								menuComboBox.addItem(dto1.getMenu());
-							}
-							break;
-						}
-					} catch (Exception e1) {
+					/*해당 레스토랑의 메뉴 가져오기*/
+						arr1 = new FoodListDAO().selectColumn("rest", restComboBox.getSelectedItem());
+						for (int i = 0; i < arr1.size(); i++) {
+							dto1 = (FoodListDTO) arr1.get(i);
+							menuComboBox.addItem(dto1.getMenu());
+					}} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
 			}
-
 		});
 		restComboBox.setBounds(297, 56, 86, 24);
 		add(restComboBox);
 
+		/*종류*/
 		String[] sortC = { "치킨", "피자", "중식" };
 		sortComboBox = new JComboBox(sortC);
 		sortComboBox.setBounds(193, 56, 92, 24);
 		add(sortComboBox);
-
+		/*종류 고르면 메뉴설정*/
 		sortComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent sort) {
 				JComboBox cb = (JComboBox) sort.getSource();
 				int index = cb.getSelectedIndex();
 				ArrayList arr;
 				String[] restC;
-
+				/*중복값없애기위해*/
 				HashSet hs = new HashSet<>();
 				FoodListDTO dto;
 
@@ -375,25 +365,21 @@ public class BoardPanel extends JPanel {
 			}
 
 		});
+		/*제목*/
 		showTitleTextField = new JTextField();
 		showTitleTextField.setEditable(false);
 		showTitleTextField.setBounds(76, 90, 399, 34);
 		add(showTitleTextField);
 		showTitleTextField.setColumns(10);
-
+		/*백그라운드*/
 		JLabel backgroundLabel = new JLabel("");
 		backgroundLabel.setIcon(new ImageIcon(BoardPanel.class.getResource("/image/\uB9AC\uBDF0\uD328\uB110.png")));
 		backgroundLabel.setBounds(0, 0, 487, 592);
 		add(backgroundLabel);
 
-		JLabel editLabel = new JLabel("");
-	
-		editLabel.setBounds(135, 499, 92, 52);
-		add(editLabel);
-
 	}
 
-	// comboAdd는 foodListDAO에 들어가지 않는다. dao는 연결만
+	/*중복값삭제 기능 메소드*/
 	public String[] comboAdd(ArrayList arr, int column) {
 		Object dto = new FoodListDTO();
 		String[] restC = { "", "", "" };
@@ -403,11 +389,6 @@ public class BoardPanel extends JPanel {
 			dto = arr.get(i);
 		}
 
-		/*
-		 * for (int i = 0; i < arr.size() / 4; i++) { if
-		 * (!restC[count].equals((arr.get(i)))) { distinctData.add(arr.get(i * 4 +
-		 * column)); if (count < 2) count++; } }
-		 */
 		arr = new ArrayList(distinctData);
 		for (int j = 0; j < arr.size(); j++) {
 			restC[j] = (String) arr.get(j);

@@ -296,6 +296,7 @@ public class BoardWritePanel extends JPanel {
 				if (indexCount == 0) {
 					indexCount++;
 				} else {
+					/*해당 레스토랑의 메뉴 가져오기*/
 					try {
 						arr1 = new FoodListDAO().selectColumn("rest", restComboBox.getSelectedItem());
 						for (int i = 0; i < arr1.size(); i++) {
