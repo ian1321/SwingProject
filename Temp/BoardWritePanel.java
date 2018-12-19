@@ -37,11 +37,10 @@ public class BoardWritePanel extends JPanel {
 
 	int grade = 0; // 등급 - 별
 	String path = ""; // 파일위치 가져오기
-	/*
-	 * int indexCount = 0; // 콤보박스 한번에 다 안뜨게 막는 카운트
-	 */
-	/* constructor */
 
+	int indexCount = 0; // 콤보박스 한번에 다 안뜨게 막는 카운트
+
+	/* constructor */
 	public BoardWritePanel() {
 		/* 패널설정 */
 		setBounds(0, 0, 500, 600);
@@ -294,29 +293,33 @@ public class BoardWritePanel extends JPanel {
 				String[] menuC;
 
 				FoodListDTO dto1 = new FoodListDTO();
-				try {
-					arr1 = new FoodListDAO().selectColumn("rest", restComboBox.getSelectedItem());
-					for (int i = 0; i < arr1.size(); i++) {
-						dto1 = (FoodListDTO) arr1.get(i);
-						menuComboBox.addItem(dto1.getMenu());
+				if (indexCount == 0) {
+					indexCount++;
+				} else {
+					try {
+						arr1 = new FoodListDAO().selectColumn("rest", restComboBox.getSelectedItem());
+						for (int i = 0; i < arr1.size(); i++) {
+							dto1 = (FoodListDTO) arr1.get(i);
+							menuComboBox.addItem(dto1.getMenu());
+						}
+					} catch (Exception e2) {
+						e2.printStackTrace();
 					}
-				} catch (Exception e2) {
-					e2.printStackTrace();
 				}
 			}
 		});
 		restComboBox.setBounds(308, 47, 86, 24);
 		add(restComboBox);
-		/*메뉴 콤보박스*/
+		/* 메뉴 콤보박스 */
 		menuComboBox = new JComboBox();
 		menuComboBox.setBounds(406, 47, 80, 24);
 		add(menuComboBox);
-		/*지역 콤보박스*/
+		/* 지역 콤보박스 */
 		String[] loc = { "서울", "경기", "강원" };
 		JComboBox locComboBox = new JComboBox(loc);
 		locComboBox.setBounds(102, 47, 92, 24);
 		add(locComboBox);
-		/*백그라운드*/
+		/* 백그라운드 */
 		JLabel backGroundPanel = new JLabel();
 		backGroundPanel.setSize(500, 600);
 		backGroundPanel.setIcon(new ImageIcon(BoardWritePanel.class.getResource("/image/글쓰기패널.png")));

@@ -119,7 +119,7 @@ public class BoardPanel extends JPanel {
 		JLabel deleteNewLabel = new JLabel("");
 		deleteNewLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent del) {
 				/* 선택하기 */
 				int sRow = jTable.getSelectedRow();
 				/* 선택한행의 아이디 */
@@ -137,8 +137,8 @@ public class BoardPanel extends JPanel {
 							/* 선택한 행 삭제 */
 							new BoardDAO().delete(jTable.getValueAt(sRow, 0));
 							JOptionPane.showMessageDialog(null, "글이 삭제되었습니다.", "알림", 0);
-						} catch (Exception e1) {
-							e1.printStackTrace();
+						} catch (Exception e2) {
+							e2.printStackTrace();
 						}
 					}
 				} else {
@@ -150,10 +150,11 @@ public class BoardPanel extends JPanel {
 
 		);
 
+		/*수정*/
 		JLabel correctingLabel = new JLabel("");
 		correctingLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent upt) {
 				// 선택한 값의 id가져오기
 				int sRow = jTable.getSelectedRow();
 				String rowId = (String) jTable.getValueAt(sRow, 2);
@@ -169,30 +170,31 @@ public class BoardPanel extends JPanel {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-
+					/*수정할값 BoardWritePanel에 불러오기*/
 					BoardWritePanel boardWritePanel = new BoardWritePanel();
 					boardWritePanel.menuComboBox.addItem(bDto.getFmenu());
 					boardWritePanel.titleTextField.setText(bDto.getTitle());
 					boardWritePanel.textPane.setText(bDto.getContent());
-
+					/*setvisible*/
 					MainPage.mainPanel.add(boardWritePanel);
 					boardWritePanel.setVisible(true);
 					setVisible(false);
 				}
 			}
 		});
-
+		/*글쓰기*/
 		JLabel writeLabel = new JLabel("");
 		writeLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void mouseClicked(MouseEvent write) {
+				/*글쓰기panel*/
 				BoardWritePanel boardWritePanel = new BoardWritePanel();
 				MainPage.mainPanel.add(boardWritePanel);
 				boardWritePanel.setVisible(true);
 				setVisible(false);
 			}
 		});
-
+		/*종료*/
 		JButton btnNewButton = new JButton("X");
 		btnNewButton.setForeground(Color.WHITE);
 		btnNewButton.setBackground(Color.RED);
@@ -202,6 +204,8 @@ public class BoardPanel extends JPanel {
 				MainPage.mainPagePanel.setVisible(true);
 			}
 		});
+		
+		/*위치설정*/
 		btnNewButton.setBounds(421, 0, 54, 27);
 		add(btnNewButton);
 		writeLabel.setBounds(8, 499, 92, 52);
@@ -212,20 +216,20 @@ public class BoardPanel extends JPanel {
 		add(deleteNewLabel);
 		AllListLabel.setBounds(380, 499, 95, 52);
 		add(AllListLabel);
-
+		/*스크롤 - jTable*/
 		JScrollPane scrollPane = new JScrollPane(jTable);
 		scrollPane.setBounds(8, 167, 467, 325);
 		add(scrollPane);
 
+		/*콤보박스*/
 		String[] loc = { "서울", "경기", "강원" };
 		JComboBox<Object> locComboBox = new JComboBox<Object>(loc);
 		locComboBox.setBounds(91, 56, 92, 24);
 		add(locComboBox);
-
+		
 		menuComboBox = new JComboBox<Object>();
 		menuComboBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e1) {
-				;
+			public void actionPerformed(ActionEvent menu) {
 				try {
 					ArrayList<BoardDTO> arr1 = new BoardDAO().selectMine("fmenu", menuComboBox.getSelectedItem());
 					Object[][] rowData1 = new Object[arr1.size()][4]; // 테이블 row에 넣을 Object2차 배열
@@ -236,7 +240,6 @@ public class BoardPanel extends JPanel {
 						rowData1[i][1] = dto.getTitle();
 						rowData1[i][2] = dto.getId();
 						rowData1[i][3] = dto.getFmenu();
-
 					}
 					jTable.setModel(new DefaultTableModel(rowData1, columnNames));
 					jTable.getColumnModel().getColumn(0).setResizable(false);
@@ -251,18 +254,15 @@ public class BoardPanel extends JPanel {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				;
-
 			}
-
 		});
 		menuComboBox.setBounds(395, 56, 80, 24);
 		add(menuComboBox);
 
 		restComboBox = new JComboBox();
 		restComboBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JComboBox cb1 = (JComboBox) e.getSource();
+			public void actionPerformed(ActionEvent rest) {
+				JComboBox cb1 = (JComboBox) rest.getSource();
 				int index = cb1.getSelectedIndex();
 				ArrayList arr1;
 				String[] menuC;
@@ -313,8 +313,8 @@ public class BoardPanel extends JPanel {
 		add(sortComboBox);
 
 		sortComboBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JComboBox cb = (JComboBox) e.getSource();
+			public void actionPerformed(ActionEvent sort) {
+				JComboBox cb = (JComboBox) sort.getSource();
 				int index = cb.getSelectedIndex();
 				ArrayList arr;
 				String[] restC;
@@ -387,12 +387,7 @@ public class BoardPanel extends JPanel {
 		add(backgroundLabel);
 
 		JLabel editLabel = new JLabel("");
-		editLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-
-			}
-		});
+	
 		editLabel.setBounds(135, 499, 92, 52);
 		add(editLabel);
 
